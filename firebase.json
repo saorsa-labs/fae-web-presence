@@ -1,0 +1,54 @@
+{
+  "hosting": [
+    {
+      "target": "thefae-com",
+      "public": "thefae.com",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+    },
+    {
+      "target": "myfae-ai",
+      "public": "myfae.ai",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+    },
+    {
+      "target": "withfae-ai",
+      "public": "withfae.ai",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+    },
+    {
+      "target": "getfae-ai",
+      "public": "getfae.ai",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+    },
+    {
+      "target": "jointhefae-com",
+      "public": "jointhefae.com",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+    },
+    {
+      "target": "downloadfae-com",
+      "public": "downloadfae.com",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+    },
+    {
+      "target": "ai-companion-com",
+      "public": "ai-companion.com",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+    },
+    {
+      "target": "meetfae-ai",
+      "public": "meetfae.ai",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+    },
+    {
+      "target": "meetfay-ai",
+      "public": "meetfay.ai",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+    },
+    {
+      "target": "meetfaye-ai",
+      "public": "meetfaye.ai",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+    }
+  ]
+}

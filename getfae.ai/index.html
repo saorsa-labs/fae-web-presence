@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Fae - Coming Soon</title>
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(160deg, #2d3a2e 0%, #3b4a3c 25%, #4a5a3c 50%, #3b4a3c 75%, #2d3a2e 100%);
+            color: #f0e6d3;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(ellipse at 20% 50%, rgba(193, 167, 118, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(139, 169, 112, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, rgba(193, 167, 118, 0.06) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .ornament {
+            font-size: 1.5rem;
+            color: #c1a776;
+            letter-spacing: 0.5rem;
+            margin-bottom: 2rem;
+            opacity: 0.7;
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 400;
+            letter-spacing: 0.15em;
+            margin-bottom: 1rem;
+            color: #f0e6d3;
+            text-shadow: 0 2px 20px rgba(193, 167, 118, 0.2);
+        }
+
+        .tagline {
+            font-size: clamp(1rem, 2.5vw, 1.25rem);
+            font-style: italic;
+            color: #c1a776;
+            margin-bottom: 3rem;
+            letter-spacing: 0.05em;
+        }
+
+        .divider {
+            width: 80px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #c1a776, transparent);
+            margin: 0 auto 3rem;
+        }
+
+        .coming-soon {
+            font-size: clamp(0.85rem, 2vw, 1rem);
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: #8ba970;
+            margin-bottom: 1rem;
+        }
+
+        .domain {
+            font-size: 0.85rem;
+            color: rgba(240, 230, 211, 0.4);
+            margin-top: 0.5rem;
+        }
+
+        footer {
+            position: absolute;
+            bottom: 2rem;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 0.75rem;
+            color: rgba(240, 230, 211, 0.3);
+            letter-spacing: 0.05em;
+            padding: 0 1rem;
+        }
+
+        @media (max-width: 480px) {
+            body { padding: 1.5rem; }
+            .ornament { font-size: 1.2rem; letter-spacing: 0.3rem; }
+            footer { bottom: 1rem; font-size: 0.7rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="ornament">&loz; &loz; &loz;</div>
+        <h1>Get Fae</h1>
+        <p class="tagline">Get your AI companion today</p>
+        <div class="divider"></div>
+        <p class="coming-soon">Coming Soon</p>
+        <p class="domain">getfae.ai</p>
+    </div>
+    <footer>Created by Saorsa Labs, sponsored by the Autonomi Foundation</footer>
+</body>
+</html>

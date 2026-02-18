@@ -1,0 +1,21 @@
+{
+  "projects": {
+    "default": "fae-web-presence"
+  },
+  "targets": {
+    "fae-web-presence": {
+      "hosting": {
+        "thefae-com": ["thefae-com"],
+        "myfae-ai": ["myfae-ai"],
+        "withfae-ai": ["withfae-ai"],
+        "getfae-ai": ["getfae-ai"],
+        "jointhefae-com": ["jointhefae-com"],
+        "downloadfae-com": ["downloadfae-com"],
+        "ai-companion-com": ["ai-companion-com"],
+        "meetfae-ai": ["meetfae-ai"],
+        "meetfay-ai": ["meetfay-ai"],
+        "meetfaye-ai": ["meetfaye-ai"]
+      }
+    }
+  }
+}
