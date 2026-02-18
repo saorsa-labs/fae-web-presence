@@ -5,7 +5,7 @@
   "targets": {
     "fae-web-presence": {
       "hosting": {
-        "thefae-com": ["thefae-com"],
+        "thefae-com": ["thefae-site"],
         "myfae-ai": ["myfae-ai"],
         "withfae-ai": ["withfae-ai"],
         "getfae-ai": ["getfae-ai"],
