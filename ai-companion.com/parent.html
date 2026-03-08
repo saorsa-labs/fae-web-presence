@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fae - The questions you'd rather nobody saw you asking.</title>
+<meta name="description" content="Fae is a free AI assistant for parents. Holiday planning, homework help, health worries, school situations - handled privately. Nothing leaves your device. No account. No cost.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,600;1,9..144,700&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper:   #FFFCF8;
+    --ink:     #1E1208;
+    --glen:    #D9572B;
+    --glen-d:  #B8451D;
+    --glen-l:  rgba(217,87,43,0.08);
+    --glen-m:  rgba(217,87,43,0.15);
+    --terra:   #D9572B;
+    --terra-l: rgba(217,87,43,0.08);
+    --terra-m: rgba(217,87,43,0.15);
+    --rowan:   #D9572B;
+    --rowan-l: rgba(217,87,43,0.08);
+    --sun:     #E8A847;
+    --sun-l:   rgba(232,168,71,0.12);
+    --dawn:    #FFF4EA;
+    --moss:    #B8451D;
+    --warm:    #F2E0CC;
+    --muted:   #8A7060;
+    --rule:    rgba(30,18,8,0.08);
+    --card:    #FFF8F2;
+    --dark:    #1E1208;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.022'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 9999;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(255,251,247,0.96);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--rule);
+    padding: 0 48px;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 56px;
+  }
+
+  .nav-logo {
+    font-family: 'Fraunces', serif;
+    font-size: 20px; font-weight: 800;
+    color: var(--ink); letter-spacing: -0.02em;
+  }
+  .nav-logo span { color: var(--rowan); font-style: italic; }
+
+  .nav-centre {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .nav-right { display: flex; align-items: center; gap: 20px; }
+
+  .mode-toggle {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted); cursor: pointer;
+    border: 1px solid var(--rule);
+    padding: 4px 10px; background: none;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .mode-toggle:hover { color: var(--glen); border-color: var(--glen); }
+
+  .nav-cta {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 12px; font-weight: 500;
+    padding: 8px 18px;
+    background: var(--terra); color: white;
+    text-decoration: none; border-radius: 50px;
+    transition: background 0.2s, transform 0.15s;
+    letter-spacing: 0.01em;
+  }
+  .nav-cta:hover { background: #D0521A; transform: translateY(-1px); }
+
+  /* ── TICKER ── */
+  .ticker {
+    background: #0D1B3E;
+    border-bottom: 1px solid rgba(217,87,43,0.15);
+    padding: 10px 0; overflow: hidden;
+  }
+  .ticker-track {
+    display: flex; gap: 0;
+    animation: tickerScroll 40s linear infinite;
+    width: max-content;
+  }
+  @keyframes tickerScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .ticker-item {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(200,220,255,0.55);
+    white-space: nowrap; padding: 0 28px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .ticker-dot {
+    width: 3px; height: 3px; border-radius: 50%;
+    background: var(--sun); flex-shrink: 0;
+  }
+
+  /* ── HERO ── */
+  .hero-wrap {
+    background: radial-gradient(ellipse 100% 70% at 50% 0%, rgba(232,98,42,0.09) 0%, rgba(245,166,35,0.04) 40%, transparent 70%);
+  }
+
+  .hero {
+    padding: 80px 48px 0;
+    max-width: 1100px; margin: 0 auto;
+    text-align: center;
+  }
+
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--terra);
+    border: 1px solid rgba(232,98,42,0.25);
+    padding: 6px 16px; margin-bottom: 32px;
+    background: rgba(232,98,42,0.06); border-radius: 50px;
+  }
+
+  .hero-h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(52px, 7.5vw, 100px);
+    font-weight: 700; line-height: 1.0;
+    color: var(--ink); letter-spacing: -0.02em;
+    margin-bottom: 0;
+  }
+
+  .hero-h1-sub {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(48px, 7vw, 96px);
+    font-weight: 600; line-height: 1.0;
+    font-style: italic;
+    color: var(--terra);
+    margin-bottom: 36px;
+  }
+
+  .hero-divider {
+    width: 1px; height: 48px;
+    background: linear-gradient(to bottom, var(--terra), transparent);
+    margin: 0 auto 28px;
+  }
+
+  .hero-body {
+    font-size: 16px; color: var(--muted);
+    line-height: 1.9; font-weight: 300;
+    margin: 0 auto 32px;
+    max-width: 560px;
+  }
+  .hero-body strong { color: var(--ink); font-weight: 400; }
+  .hero-aside {
+    display: block; margin-top: 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--terra); opacity: 0.75;
+  }
+
+  .hero-ctas {
+    display: flex; align-items: center; justify-content: center;
+    gap: 20px; flex-wrap: wrap;
+    margin-bottom: 64px;
+  }
+
+  .cta-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 14px; font-weight: 600;
+    padding: 14px 32px;
+    background: var(--terra); color: white;
+    text-decoration: none; border-radius: 50px;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 4px 16px rgba(232,98,42,0.25);
+  }
+  .cta-primary:hover { background: #D0521A; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(232,98,42,0.35); }
+
+  .cta-note {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted); opacity: 0.7;
+  }
+
+  .hero-window-wrap {
+    max-width: 820px; margin: 0 auto;
+  }
+
+  /* ── FLOATING ORB + BUBBLES ── */
+  .hero-right {
+    position: relative;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 0;
+    min-height: 560px; justify-content: center;
+  }
+
+  .orb-float6 {
+    position: relative;
+    width: 160px; height: 160px;
+    margin: 0 auto; flex-shrink: 0; z-index: 2;
+  }
+
+  #orbCanvas6 {
+    position: absolute;
+    width: 110px; height: 110px;
+    border-radius: 50%;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 2;
+  }
+  #pulseCanvas6 {
+    position: absolute;
+    width: 220px; height: 220px;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    pointer-events: none; z-index: 1;
+  }
+
+  .orb-aura6 {
+    position: absolute; border-radius: 50%;
+    pointer-events: none;
+    top: 50%; left: 50%; transform: translate(-50%,-50%);
+  }
+  .orb-aura6-1 {
+    width: 122px; height: 122px;
+    border: 1px solid rgba(217,87,43,0.28);
+    animation: auraP6 5s ease-in-out infinite;
+  }
+  .orb-aura6-2 {
+    width: 144px; height: 144px;
+    border: 1px solid rgba(217,87,43,0.1);
+    animation: auraP6 5s ease-in-out infinite 1.8s;
+  }
+  @keyframes auraP6 {
+    0%,100% { transform: translate(-50%,-50%) scale(1); opacity: 1; }
+    50%      { transform: translate(-50%,-50%) scale(1.07); opacity: 0.25; }
+  }
+
+  .orb-name6 {
+    text-align: center; margin-top: 14px;
+    font-family: 'Fraunces', serif;
+    font-size: 24px; font-weight: 700;
+    color: rgba(255,240,220,0.95); letter-spacing: -0.02em;
+  }
+  .orb-name6 span { color: var(--sun); font-style: italic; font-weight: 400; }
+
+  .orb-state6 {
+    text-align: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px; letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(200,220,255,0.6); min-height: 14px;
+    margin-top: 5px;
+  }
+
+  /* scene pills */
+  .scene-tabs {
+    display: flex; gap: 6px;
+    margin: 20px auto 0;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .scene-tab {
+    padding: 5px 14px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 11px; font-weight: 500;
+    color: rgba(200,220,255,0.55); cursor: pointer;
+    border: 1px solid rgba(200,220,255,0.15);
+    background: transparent;
+    border-radius: 50px;
+    transition: color 0.2s, background 0.2s, border-color 0.2s;
+  }
+  .scene-tab.active {
+    color: white;
+    background: var(--terra);
+    border-color: var(--terra);
+  }
+
+  /* floating chat bubbles */
+  .chat-float6 {
+    width: 100%;
+    display: flex; flex-direction: column;
+    gap: 10px; padding: 0 4px;
+    margin-top: 18px;
+  }
+
+  .chat-scene { display: none; flex-direction: column; gap: 10px; }
+  .chat-scene.active { display: flex; }
+
+  .msg {
+    padding: 11px 15px;
+    font-size: 12px; line-height: 1.7;
+    max-width: 90%;
+    opacity: 0; transform: translateY(6px);
+    transition: opacity 0.35s ease, transform 0.3s ease;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    text-align: left;
+  }
+  .msg.show { opacity: 1; transform: translateY(0); }
+
+  .msg-user {
+    align-self: flex-end;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: rgba(255,245,235,0.95);
+    border-radius: 18px 18px 4px 18px;
+    box-shadow: 0 1px 6px rgba(44,36,32,0.05);
+  }
+
+  .msg-fae {
+    align-self: flex-start; max-width: 92%;
+    background: rgba(232,168,71,0.12);
+    border: 1px solid rgba(232,168,71,0.22);
+    color: rgba(255,245,225,0.95);
+    border-radius: 4px 18px 18px 18px;
+    font-style: italic;
+  }
+
+  .msg-list {
+    align-self: flex-start; max-width: 100%;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(200,220,255,0.12);
+    color: rgba(255,245,235,0.95);
+    border-radius: 4px 18px 18px 18px;
+    font-size: 12px;
+  }
+  .msg-list-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px; letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--glen); padding: 8px 14px 5px;
+    border-bottom: 1px solid rgba(217,87,43,0.08);
+    text-align: left;
+  }
+  .msg-list-body {
+    padding: 8px 14px 10px;
+    display: flex; flex-direction: column; gap: 5px;
+    text-align: left;
+  }
+  .msg-list-row {
+    display: flex; align-items: flex-start; gap: 7px;
+    font-size: 11px; color: rgba(255,240,215,0.85); line-height: 1.55;
+    text-align: left;
+  }
+  .msg-list-row::before {
+    content: ''; flex-shrink: 0;
+    width: 4px; height: 4px; border-radius: 50%;
+    background: var(--sun); margin-top: 5px;
+  }
+
+  .msg-search {
+    align-self: flex-start; max-width: 92%;
+    background: rgba(200,220,255,0.05);
+    border: 1px solid rgba(200,220,255,0.1);
+    border-radius: 4px 18px 18px 18px;
+    padding: 10px 14px;
+    display: flex; flex-direction: column; gap: 5px;
+  }
+  .msg-search-row {
+    font-family: 'DM Mono', monospace;
+    font-size: 9.5px; letter-spacing: 0.04em;
+    color: rgba(200,220,255,0.65);
+    display: flex; align-items: center; gap: 6px;
+    text-align: left;
+  }
+  .search-icon { font-size: 10px; opacity: 0.7; }
+  /* msg-search always on dark in chat-demo */
+
+  .typing {
+    align-self: flex-start;
+    display: flex; gap: 4px; align-items: center;
+    padding: 10px 14px;
+    background: rgba(232,168,71,0.06);
+    border: 1px solid rgba(217,87,43,0.08);
+    border-radius: 4px 18px 18px 18px;
+    opacity: 0; transition: opacity 0.2s;
+  }
+  .typing.show { opacity: 1; }
+  .typing span {
+    width: 4px; height: 4px; border-radius: 50%;
+    background: rgba(217,87,43,0.5);
+    animation: typDot 1s ease-in-out infinite;
+  }
+  .typing span:nth-child(2) { animation-delay: 0.16s; }
+  .typing span:nth-child(3) { animation-delay: 0.32s; }
+  @keyframes typDot {
+    0%,60%,100% { transform: translateY(0); opacity: 0.4; }
+    30%          { transform: translateY(-4px); opacity: 1; }
+  }
+
+  /* floating input */
+  .win-input {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(245,240,235,0.8);
+    border: 1px solid rgba(217,87,43,0.1);
+    border-radius: 24px;
+    padding: 10px 18px;
+    margin: 14px 4px 0;
+    box-shadow: 0 2px 12px rgba(44,36,32,0.04);
+    text-align: left;
+  }
+  .win-prompt {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; color: var(--terra); opacity: 0.7;
+    flex-shrink: 0;
+  }
+  .win-typed-wrap { flex: 1; position: relative; min-height: 15px; text-align: left; overflow: hidden; }
+  .win-placeholder {
+    position: absolute; top: 0; left: 0;
+    font-size: 11px; color: rgba(120,90,60,0.45);
+    font-style: normal; pointer-events: none;
+    white-space: nowrap; transition: opacity 0.15s;
+  }
+  .win-typed {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 11px; color: rgba(30,18,8,0.85);
+    white-space: normal; word-break: break-word;
+    text-align: left;
+  }
+  .win-caret {
+    display: inline-block; width: 1px; height: 12px;
+    background: var(--terra); margin-left: 1px; vertical-align: middle;
+    animation: caretBlink6 0.9s step-end infinite;
+  }
+  @keyframes caretBlink6 { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  /* ── CHAT DEMO SECTION ── */
+  .chat-demo-section {
+    padding: 80px 48px;
+    background: #0D1B3E;
+    border-top: none;
+    border-bottom: none;
+  }
+  .chat-demo-inner {
+    max-width: 820px; margin: 0 auto;
+    text-align: center;
+  }
+  .chat-demo-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(200,220,255,0.5);
+    margin-bottom: 32px;
+  }
+  body.dark-mode .chat-demo-section { background: #0A1530; }
+
+  /* ── QUESTIONS BAND ── */
+  .questions-band {
+    background: var(--dawn);
+    padding: 72px 48px;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .questions-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; align-items: start;
+  }
+  .q-left {}
+  .q-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--terra); margin-bottom: 16px;
+  }
+  .q-h {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(32px, 3.5vw, 46px);
+    font-weight: 700; line-height: 1.05;
+    color: var(--ink); letter-spacing: -0.02em;
+    margin-bottom: 20px;
+  }
+  .q-h em { font-style: italic; font-weight: 600; color: var(--terra); }
+  .q-body {
+    font-size: 14px; color: var(--muted);
+    line-height: 1.9; font-weight: 400; margin-bottom: 14px;
+  }
+  .q-body strong { color: var(--ink); font-weight: 600; }
+
+  .q-right {
+    display: flex; flex-direction: column; gap: 0;
+  }
+  .q-item {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--rule);
+    display: flex; gap: 14px; align-items: flex-start;
+  }
+  .q-item:first-child { padding-top: 0; }
+  .q-item:last-child { border-bottom: none; }
+  .q-dot {
+    flex-shrink: 0; margin-top: 7px;
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--sun); opacity: 0.9;
+  }
+  .q-text {
+    font-size: 14px; color: var(--muted);
+    line-height: 1.65; font-weight: 400; font-style: italic;
+  }
+  .q-text strong { color: var(--ink); font-style: normal; font-weight: 600; }
+
+  /* ── HANDLES / USE CASES ── */
+  .handles-section {
+    padding: 100px 48px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .handles-inner { max-width: 1100px; margin: 0 auto; }
+  .handles-top {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; align-items: end;
+    margin-bottom: 52px;
+  }
+  .handles-h {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(36px, 4vw, 52px);
+    font-weight: 300; line-height: 1.05;
+    color: var(--muted); letter-spacing: -0.02em;
+  }
+  .handles-h em { font-style: italic; font-weight: 700; color: var(--terra); }
+  .handles-note {
+    font-size: 14px; color: var(--muted);
+    line-height: 1.85; font-weight: 300;
+  }
+  .handles-note strong { color: var(--ink); font-weight: 500; }
+
+  .handles-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 12px; background: transparent;
+    border: none;
+  }
+  .handle-card {
+    background: var(--paper);
+    padding: 28px 24px;
+    transition: background 0.2s, box-shadow 0.2s;
+  }
+  .handle-card:hover { background: white; box-shadow: 0 4px 24px rgba(232,98,42,0.1); }
+  .handle-icon {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: rgba(232,98,42,0.08);
+    border: 1.5px solid rgba(232,98,42,0.15);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--terra); margin-bottom: 16px;
+  }
+  .handle-title {
+    font-family: 'Fraunces', serif;
+    font-size: 17px; font-weight: 600;
+    color: var(--ink); line-height: 1.2;
+    margin-bottom: 9px; letter-spacing: -0.01em;
+  }
+  .handle-body {
+    font-size: 12px; color: var(--muted);
+    line-height: 1.85; font-weight: 300;
+  }
+  .handle-body strong { color: var(--ink); font-weight: 500; }
+
+  /* ── PRIVACY / FREE BAND ── */
+  .private-band {
+    background: #0D1B3E;
+    padding: 80px 48px;
+    border-bottom: 1px solid rgba(217,87,43,0.07);
+  }
+  .private-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; align-items: center;
+  }
+  .private-h {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(34px, 4vw, 50px);
+    font-weight: 700; line-height: 1.05;
+    color: rgba(255,245,230,0.95); letter-spacing: -0.02em;
+    margin-bottom: 20px;
+  }
+  .private-h em { font-style: italic; font-weight: 600; color: var(--terra); }
+  .private-body {
+    font-size: 14px; color: rgba(220,230,245,0.72);
+    line-height: 1.9; font-weight: 400; margin-bottom: 16px;
+  }
+  .private-body strong { color: rgba(255,245,225,0.95); font-weight: 600; }
+
+  .private-facts {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 1px; background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 4px; overflow: hidden;
+  }
+  .private-fact {
+    padding: 24px 22px;
+    background: rgba(255,255,255,0.04);
+  }
+  .private-fact-val {
+    font-family: 'Fraunces', serif;
+    font-size: 36px; font-weight: 700;
+    color: var(--sun); line-height: 1;
+    letter-spacing: -0.02em; margin-bottom: 4px;
+  }
+  .private-fact-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px; letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(200,220,255,0.6);
+  }
+
+  /* ── CTA ── */
+  .cta-section {
+    background: #0D1B3E;
+    padding: 100px 48px;
+    text-align: center;
+  }
+  .cta-inner { max-width: 680px; margin: 0 auto; }
+  .cta-pre {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(232,130,60,0.8); margin-bottom: 20px;
+  }
+  .cta-h {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(44px, 5vw, 64px);
+    font-weight: 700; line-height: 1.0;
+    color: rgba(255,245,230,0.95); letter-spacing: -0.02em;
+  }
+  .cta-h-sub {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(40px, 4.5vw, 58px);
+    font-weight: 700; font-style: italic;
+    color: var(--sun); letter-spacing: -0.02em;
+    margin-bottom: 28px; line-height: 1.0;
+  }
+  .cta-body {
+    font-size: 15px; color: rgba(220,230,245,0.72);
+    line-height: 1.85; font-weight: 400;
+    margin-bottom: 36px;
+  }
+  .cta-btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 14px; font-weight: 600;
+    padding: 16px 36px;
+    background: var(--terra); color: white;
+    text-decoration: none; border-radius: 50px;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 6px 24px rgba(232,98,42,0.3);
+  }
+  .cta-btn:hover { background: #D0521A; transform: translateY(-3px); box-shadow: 0 8px 28px rgba(232,98,42,0.4); }
+  .cta-small {
+    margin-top: 20px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(180,210,255,0.5);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #0A1530;
+    padding: 32px 48px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-top: 1px solid rgba(217,87,43,0.08);
+  }
+  .footer-logo {
+    font-family: 'Fraunces', serif;
+    font-size: 22px; font-weight: 700;
+    color: rgba(180,210,255,0.45); letter-spacing: -0.01em;
+  }
+  .footer-logo span { color: var(--rowan); font-style: italic; }
+  .footer-links { display: flex; gap: 24px; }
+  .footer-links a {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(180,210,255,0.5); text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: rgba(255,220,180,0.7); }
+  .footer-credit {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px; letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(200,220,255,0.35);
+    margin-top: 8px;
+  }
+
+  /* ── DARK MODE ── */
+  body.dark-mode {
+    --paper:  #0A1530;
+    --card:   #0F1E44;
+    --rule:   rgba(255,255,255,0.07);
+    --ink:    rgba(255,245,230,0.95);
+    --muted:  rgba(200,215,240,0.65);
+    --warm:   #0A1530;
+    --dawn:   #0F1E44;
+  }
+  body.dark-mode nav { background: rgba(10,21,48,0.97); }
+  /* chat demo always on dark navy - no dark mode override needed */
+  body.dark-mode .orb-aura6-1 { border-color: rgba(217,87,43,0.35); }
+  body.dark-mode .orb-aura6-2 { border-color: rgba(232,168,71,0.12); }
+  body.dark-mode .handle-card { background: #131F42; }
+  body.dark-mode .handle-card:hover { background: #1A2850; }
+  /* how-strip and questions on dark mode get navy treatment */
+  body.dark-mode .how-strip { background: #0F1E44; border-bottom-color: rgba(255,255,255,0.06); }
+  body.dark-mode .how-num { background: var(--terra); }
+  body.dark-mode .q-quote-block { background: rgba(255,255,255,0.04); border-left-color: var(--terra); }
+  body.dark-mode .q-quote-text { color: rgba(255,245,225,0.88); }
+  body.dark-mode .q-item { border-bottom-color: rgba(255,255,255,0.07); }
+  body.dark-mode .handles-section { border-bottom-color: rgba(255,255,255,0.06); }
+
+  body, body * {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  }
+
+  @media (max-width: 900px) {
+    nav, footer { padding-left: 20px; padding-right: 20px; }
+    .hero { grid-template-columns: 1fr; padding: 48px 20px; gap: 40px; }
+    .questions-inner { grid-template-columns: 1fr; gap: 40px; padding: 0 20px; }
+    .questions-band { padding: 60px 20px; }
+    .handles-section { padding: 60px 20px; }
+    .chat-demo-section { padding: 60px 20px; }
+    .handles-top { grid-template-columns: 1fr; gap: 24px; }
+    .handles-grid { grid-template-columns: 1fr; }
+    .private-band { padding: 60px 20px; }
+    .private-inner { grid-template-columns: 1fr; gap: 40px; }
+    .cta-section { padding: 60px 20px; }
+  }
+
+  /* ── HOW IT WORKS STRIP ── */
+  .how-strip {
+    background: var(--paper);
+    border-bottom: 1px solid var(--rule);
+    padding: 48px 48px;
+  }
+  .how-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    position: relative;
+  }
+  .how-inner::before {
+    content: '';
+    position: absolute;
+    top: 20px; left: calc(16.66% + 12px); right: calc(16.66% + 12px);
+    height: 1px;
+    background: linear-gradient(to right, var(--terra), rgba(217,87,43,0.2), var(--terra));
+    opacity: 0.3;
+  }
+  .how-step {
+    text-align: center; padding: 0 24px;
+    position: relative;
+  }
+  .how-num {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--terra); color: white;
+    font-family: 'Fraunces', serif; font-size: 16px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px;
+    position: relative; z-index: 1;
+  }
+  .how-title {
+    font-family: 'Fraunces', serif;
+    font-size: 15px; font-weight: 600;
+    color: var(--ink); margin-bottom: 8px;
+  }
+  .how-body {
+    font-size: 13px; color: var(--muted);
+    line-height: 1.7; font-weight: 400;
+  }
+
+  /* ── QUOTE BLOCK ── */
+  .q-quote-block {
+    margin-top: 28px;
+    padding: 20px 22px;
+    background: white;
+    border-left: 3px solid var(--terra);
+    border-radius: 0 8px 8px 0;
+  }
+  .q-quote-text {
+    font-family: 'Fraunces', serif;
+    font-size: 15px; font-style: italic; font-weight: 400;
+    color: var(--ink); line-height: 1.65;
+    margin-bottom: 10px;
+  }
+  .q-quote-attr {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px; letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--terra);
+  }
+
+  /* ── APPLE STORE BUTTONS ── */
+  .cta-stores {
+    display: flex; gap: 14px; justify-content: center;
+    flex-wrap: wrap; margin-bottom: 20px;
+  }
+  .store-btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 11px 22px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(200,220,255,0.2);
+    border-radius: 12px;
+    color: rgba(255,245,235,0.9);
+    text-decoration: none;
+    transition: background 0.2s, border-color 0.2s;
+    min-width: 180px;
+  }
+  .store-btn:hover { background: rgba(255,255,255,0.13); border-color: rgba(200,220,255,0.35); }
+  .store-icon { flex-shrink: 0; opacity: 0.9; }
+  .store-label { display: flex; flex-direction: column; gap: 1px; text-align: left; }
+  .store-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 8px; letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(200,220,255,0.55);
+  }
+  .store-name {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 14px; font-weight: 600;
+    color: rgba(255,245,235,0.95);
+  }
+
+  /* ── STICKY MOBILE DOWNLOAD BAR ── */
+  .sticky-bar {
+    display: none;
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: #0D1B3E;
+    border-top: 1px solid rgba(200,220,255,0.12);
+    padding: 12px 20px;
+    z-index: 200;
+    align-items: center; justify-content: space-between; gap: 12px;
+  }
+  .sticky-bar-text {
+    font-size: 12px; color: rgba(200,220,255,0.6);
+    font-family: 'DM Mono', monospace;
+    font-size: 9px; letter-spacing: 0.08em;
+    text-transform: uppercase;
+    flex: 1;
+  }
+  .sticky-bar-btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 10px 20px;
+    background: var(--terra); color: white;
+    text-decoration: none; border-radius: 50px;
+    font-size: 13px; font-weight: 600;
+    white-space: nowrap;
+    box-shadow: 0 4px 14px rgba(217,87,43,0.35);
+  }
+
+  /* ── SCENARIO ITALIC OPENER on cards ── */
+  .handle-situation {
+    font-family: 'Fraunces', serif;
+    font-size: 13px; font-style: italic; font-weight: 400;
+    color: var(--muted); margin-bottom: 10px; line-height: 1.5;
+    display: block;
+  }
+
+  @media (max-width: 680px) {
+    .sticky-bar { display: flex; }
+    .how-inner { grid-template-columns: 1fr; gap: 32px; }
+    .how-inner::before { display: none; }
+    .how-step { text-align: left; display: flex; gap: 16px; align-items: flex-start; }
+    .how-step > div { text-align: left; }
+    .how-num { margin: 0; flex-shrink: 0; }
+    .cta-stores { flex-direction: column; align-items: center; }
+  }
+
+  /* ── QUOTE AVATAR ── */
+  .q-quote-avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--terra);
+    display: flex; align-items: center; justify-content: center;
+    color: white; margin-bottom: 10px;
+    flex-shrink: 0;
+  }
+  .q-quote-block { position: relative; }
+
+  /* ── HOW REASSURE ── */
+  .how-reassure {
+    margin-top: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px; letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--terra); opacity: 0.8;
+  }
+
+  /* ── MOBILE CAROUSEL ── */
+  @media (max-width: 680px) {
+    .handles-grid {
+      display: flex !important;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      gap: 12px !important;
+      padding-bottom: 16px;
+      /* hide scrollbar */
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .handles-grid::-webkit-scrollbar { display: none; }
+    .handles-grid .handle-card {
+      flex: 0 0 85vw;
+      scroll-snap-align: start;
+      max-width: 85vw;
+    }
+    .carousel-dots {
+      display: flex !important;
+      justify-content: center; gap: 6px;
+      margin-top: 14px;
+    }
+  }
+  .carousel-dots { display: none; }
+  .carousel-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--rule); transition: background 0.2s;
+  }
+  .carousel-dot.active { background: var(--terra); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">F<span>ae</span></div>
+  <div class="nav-centre">Fae for Families</div>
+  <div class="nav-right">
+    <button class="mode-toggle" onclick="toggleMode6()" id="modeBtn6">[ Dark ]</button>
+    <a href="#download" class="nav-cta">Get Fae free</a>
+  </div>
+</nav>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-track">
+    <span class="ticker-item"><span class="ticker-dot"></span>Garden Olympics and home adventures</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Helping with homework</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Awkward emails</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Family timetables and logistics</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Meal plans for the week</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Secondary school research</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Is this normal questions</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Teenager situations</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Family budget planning</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>A week at home that feels like a holiday</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>What to say to the GP</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Garden Olympics and home adventures</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Helping with homework</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Awkward emails</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Family timetables and logistics</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Meal plans for the week</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Secondary school research</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Is this normal questions</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Teenager situations</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Family budget planning</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>A week at home that feels like a holiday</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>What to say to the GP</span>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero-wrap">
+<section class="hero">
+  <div class="hero-tag">
+    <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+    Fae for Families
+  </div>
+
+  <div class="hero-h1">Power to the parents.</div>
+  <div class="hero-h1-sub">A tool just for you.</div>
+
+  <div class="hero-divider"></div>
+
+  <p class="hero-body">
+    Fae is a free AI assistant built only for you. Holiday planning, homework support, awkward emails, family logistics - ask anything. Your conversation never leaves your device. <span class="hero-aside">No account. No contract. No cloud.</span>
+  </p>
+
+  <div class="hero-ctas">
+    <a href="#download" class="cta-primary">
+      Get Fae free
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+    <span class="cta-note">// No account. No subscription. Just free.</span>
+  </div>
+
+</section>
+</div><!-- /hero-wrap -->
+
+<!-- HOW IT WORKS -->
+<section class="how-strip">
+  <div class="how-inner">
+    <div class="how-step">
+      <div class="how-num">1</div>
+      <div>
+        <div class="how-title">Download the app</div>
+        <p class="how-body">Free from the Mac App Store or iPhone App Store. No account. Nothing to sign up for. Opens like any other app.</p>
+      </div>
+    </div>
+    <div class="how-step">
+      <div class="how-num">2</div>
+      <div>
+        <div class="how-title">Ask Fae anything</div>
+        <p class="how-body">Type your question just as you'd say it. Fae thinks it through, searches where needed, and replies with a clear, useful answer.</p>
+      </div>
+    </div>
+    <div class="how-step">
+      <div class="how-num">3</div>
+      <div>
+        <div class="how-title">Your conversation stays yours</div>
+        <p class="how-body">Nothing leaves your device. No history stored. No company sees what you asked. Close the app and it's gone - completely.</p>
+        <div class="how-reassure">Fae has no opinions about your parenting. It just answers.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CHAT DEMO -->
+<section class="chat-demo-section">
+  <div class="chat-demo-inner">
+    <div class="chat-demo-label">// see fae in action</div>
+  <div class="hero-right">
+
+    <div class="orb-float6">
+      <div class="orb-aura6 orb-aura6-1"></div>
+      <div class="orb-aura6 orb-aura6-2"></div>
+      <canvas id="pulseCanvas6" width="220" height="220"></canvas>
+      <canvas id="orbCanvas6" width="110" height="110"></canvas>
+    </div>
+    <div class="orb-name6">F<span>ae</span></div>
+    <div class="orb-state6" id="winState6">Listening...</div>
+
+    <div class="scene-tabs">
+      <button class="scene-tab active" onclick="switchScene6(1)" id="tab6-1">Need Inspiration</button>
+      <button class="scene-tab" onclick="switchScene6(2)" id="tab6-2">School Support</button>
+      <button class="scene-tab" onclick="switchScene6(3)" id="tab6-3">Planning Help</button>
+    </div>
+
+    <div class="chat-float6">
+
+        <!-- Scene 1: At-home week planning -->
+        <div class="chat-scene active" id="sc6-1">
+          <div class="msg msg-user" id="s6-1u1">we're at home for the week - kids are 6 and 9. ideas that cost nearly nothing but genuinely tire them out?</div>
+          <div class="typing" id="s6-1d1"><span></span><span></span><span></span></div>
+          <div class="msg msg-fae" id="s6-1f1">Garden Olympics, den building, a bake-off they judge themselves, a nature hunt, home cinema night. All free, all different. I've put a full day-by-day plan together - I've saved it to your computer. Would you like to view it?</div>
+          <div class="msg msg-user" id="s6-1u2">yes please</div>
+          <div class="typing" id="s6-1d2"><span></span><span></span><span></span></div>
+          <div class="msg msg-fae" id="s6-1f2">Done - opening now. Each day has a full activity plan, what you'll need, and how to run it. Let me know if you want to swap anything out.</div>
+        </div>
+
+        <!-- Scene 2: School Support help -->
+        <div class="chat-scene" id="sc6-2">
+          <div class="msg msg-user" id="s6-2u1">my daughter has a piece on the water cycle due tomorrow and i can't really remember how it works - can you help me help her?</div>
+          <div class="typing" id="s6-2d1"><span></span><span></span><span></span></div>
+          <div class="msg msg-search" id="s6-2s1">
+            <div class="msg-search-row"><span class="search-icon">&#x2318;</span> Searching BBC Bitesize, Khan Academy, UK KS2 curriculum...</div>
+            <div class="msg-search-row"><span class="search-icon">&#x2714;</span> 4 sources reviewed - consistent across all</div>
+          </div>
+          <div class="msg msg-fae" id="s6-2f1">I've checked four sources so you can be confident in this. The water cycle has four stages - evaporation (water rises from lakes and sea as vapour), condensation (it forms clouds), precipitation (it falls as rain or snow), collection (it gathers in rivers and seas and starts again). I'll explain each one simply so you can walk her through it.</div>
+          <div class="msg msg-user" id="s6-2u2">brilliant - and some questions i can ask her after to check she's got it?</div>
+          <div class="typing" id="s6-2d2"><span></span><span></span><span></span></div>
+          <div class="msg msg-fae" id="s6-2f2">Five questions ready - starting easy, getting harder. I've also saved a one-page summary to your computer she can use as a reference while she writes.</div>
+        </div>
+
+        <!-- Scene 3: Family timetable -->
+        <div class="chat-scene" id="sc6-3">
+          <div class="msg msg-user" id="s6-3u1">between school runs, clubs, shopping and errands i'm feeling a bit overwhelmed. i keep worrying i'm going to forget something important - can you help me get on top of it?</div>
+          <div class="typing" id="s6-3d1"><span></span><span></span><span></span></div>
+          <div class="msg msg-fae" id="s6-3f1">Yes - let's work through it together. Tell me who needs to be where each day and I'll handle the rest. Clubs, pickups, meals, shopping - I'll build the whole week around what you have.</div>
+          <div class="msg msg-user" id="s6-3u2">two kids, three clubs across the week, one car in the daytime, homework needs to happen somewhere, shopping needs doing tuesday or thursday</div>
+          <div class="typing" id="s6-3d2"><span></span><span></span><span></span></div>
+          <div class="msg msg-fae" id="s6-3f2">I've built a full week around that - pickups, meal times, a shopping list for Thursday, and a weekly planner you can print out for the fridge. I've saved it to your computer. Want to take a look?</div>
+        </div>
+
+    </div>
+
+    <div class="win-input">
+      <div class="win-prompt">&gt;</div>
+      <div class="win-typed-wrap">
+        <span class="win-placeholder" id="winPlaceholder6">ask Fae</span>
+        <span class="win-typed" id="winTyped6"></span><span class="win-caret" id="winCaret6"></span>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  </div>
+</section>
+<!-- QUESTIONS BAND -->
+<section class="questions-band">
+  <div class="questions-inner">
+    <div class="q-left">
+      <div class="q-eyebrow">// helpful insights when you need them</div>
+      <h2 class="q-h">
+        Get the answers you need,<br>
+        <em>not the opinions you don't.</em>
+      </h2>
+      <p class="q-body">
+        Family life moves fast. Sometimes you need a quick answer, a plan, or someone to help you think something through. <strong>Fae is the knowledgeable friend who's always available</strong> - not to replace your judgement, but to give you the information that makes it better.
+      </p>
+      <p class="q-body">
+        Every answer comes back to you. No cloud, no company, no account. What you ask stays between you and Fae.
+      </p>
+      <div class="q-quote-block">
+        <div class="q-quote-avatar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <p class="q-quote-text">"I didn't expect it to actually be useful. I asked about a school situation I'd been overthinking for a week. Fae just answered it. No judgement, no faff."</p>
+        <div class="q-quote-attr">// Parent of two, Edinburgh</div>
+      </div>
+    </div>
+    <div class="q-right">
+      <div class="q-item">
+        <div class="q-dot"></div>
+        <div class="q-text"><strong>"What's actually in this homework - I want to help but I don't recognise the method they're teaching."</strong> Fae explains it so you can be the one who helps.</div>
+      </div>
+      <div class="q-item">
+        <div class="q-dot"></div>
+        <div class="q-text"><strong>"Can you help me write this awkward email - I want to raise something without it becoming a whole thing."</strong> Fae drafts it calmly and clearly.</div>
+      </div>
+      <div class="q-item">
+        <div class="q-dot"></div>
+        <div class="q-text"><strong>"Two kids, four clubs, one car before 6pm - help me build a week that actually works."</strong> Fae maps the whole thing and finds the gaps.</div>
+      </div>
+      <div class="q-item">
+        <div class="q-dot"></div>
+        <div class="q-text"><strong>"We're at home for a week - plan me something fun that costs almost nothing and genuinely tires them out."</strong> Fae builds the whole week, day by day.</div>
+      </div>
+      <div class="q-item">
+        <div class="q-dot"></div>
+        <div class="q-text"><strong>"What should I be looking at when choosing a secondary school - beyond Ofsted?"</strong> Fae gives you the questions that actually matter.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- USE CASES -->
+<section class="handles-section">
+  <div class="handles-inner">
+    <div class="handles-top">
+      <div>
+        <div class="q-eyebrow" style="margin-bottom:12px;">// what fae can help with</div>
+        <h2 class="handles-h">
+          Fae is built for just<br>
+          <em>one agenda, yours.</em>
+        </h2>
+      </div>
+      <div class="handles-note">
+        From planning a week at home to drafting an email to the school - Fae gives you the knowledge to handle it yourself. <strong>You stay in the driving seat.</strong> Fae just makes the task and research faster.
+      </div>
+    </div>
+
+    <div class="handles-grid" id="handlesCarousel">
+
+      <div class="handle-card">
+        <div class="handle-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="10" r="3"/><path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 10-16 0c0 3 2.7 6.9 8 11.7z"/></svg>
+        </div>
+        <div class="handle-title">Home for the holidays</div>
+        <em class="handle-situation">It's day three of the school holidays. You need to work. They need something to do.</em>
+        <p class="handle-body">No matter if the weather is good or bad. No matter your budget, family dynamics or time pressures - <strong>Fae will help you with ideas</strong> so you can make a perfect plan for everyone, and run it with ease - even when you need to work as well.</p>
+      </div>
+
+      <div class="handle-card">
+        <div class="handle-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+        </div>
+        <div class="handle-title">School Support support</div>
+        <em class="handle-situation">Your child's homework is due tomorrow and you don't recognise the method they're teaching.</em>
+        <p class="handle-body">When the curriculum has moved on from what you remember. <strong>Fae explains it to you first</strong> - clearly, simply - so you can be the one who helps your child understand it. Not a shortcut. A way to actually be useful at the kitchen table.</p>
+      </div>
+
+      <div class="handle-card">
+        <div class="handle-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        </div>
+        <div class="handle-title">Awkward emails</div>
+        <em class="handle-situation">Something happened at school. You need to raise it - but not in a way that makes things worse.</em>
+        <p class="handle-body">The email to the teacher. The response to a letter you don't fully understand. The question about whether what's happening is normal. <strong>Fae helps you navigate school</strong> - calmly, clearly, and with the right words.</p>
+      </div>
+
+      <div class="handle-card">
+        <div class="handle-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg>
+        </div>
+        <div class="handle-title">Family planning</div>
+        <em class="handle-situation">Two kids, three clubs, one car, homework due Thursday, fridge almost empty.</em>
+        <p class="handle-body">Clubs, cars, homework, dinner - it all lives in your head. <strong>Fae takes the details and builds the week</strong> - who needs to be where, what time, which car, when to eat. A plan you can actually follow, and change when it inevitably does.</p>
+      </div>
+
+      <div class="handle-card">
+        <div class="handle-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 3h18v18H3zM3 9h18M9 21V9"/></svg>
+        </div>
+        <div class="handle-title">Meal planning and budgets</div>
+        <em class="handle-situation">It's Sunday afternoon and you have no idea what you're cooking this week.</em>
+        <p class="handle-body">Tell Fae what you've got, how many people, how much you want to spend. <strong>She plans the week</strong> - meals, shopping list, what to batch cook. The kind of thinking that saves money and time, done in two minutes.</p>
+      </div>
+
+      <div class="handle-card">
+        <div class="handle-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+        </div>
+        <div class="handle-title">Thinking it over</div>
+        <em class="handle-situation">Sometimes you just need to think something through without anyone knowing you were thinking it.</em>
+        <p class="handle-body">Whether you're wondering about a school, a decision, a teenager situation, or just something you can't quite work out - Fae will be there to help you work it through. Any time. Every time.</p>
+      </div>
+
+    </div>
+    <div class="carousel-dots" id="carouselDots"></div>
+  </div>
+</section>
+
+<!-- PRIVACY + FREE BAND -->
+<section class="private-band">
+  <div class="private-inner">
+    <div>
+      <h2 class="private-h">
+        You know your family.<br>
+        <em>Nobody else does.</em>
+      </h2>
+      <p class="private-body">
+        There's no shortage of opinions about how to raise children. Group chats, social media, well-meaning friends - everyone has a view. <strong>Fae has no opinion about your choices.</strong> She gives you information and gets out of the way. What you do with it is entirely yours.
+      </p>
+      <p class="private-body">
+        That's the point. A tool that works only for you - not for a company, not for an algorithm, not for an advertiser. Your questions go in. Useful answers come back. <strong>Nothing in between goes anywhere.</strong>
+      </p>
+      <p class="private-body">
+        No contract. No subscription. No cloud. No judgment.
+      </p>
+    </div>
+    <div class="private-facts">
+      <div class="private-fact">
+        <div class="private-fact-val">£0</div>
+        <div class="private-fact-label">Forever. Not a trial.</div>
+      </div>
+      <div class="private-fact">
+        <div class="private-fact-val">0</div>
+        <div class="private-fact-label">Data leaves your device</div>
+      </div>
+      <div class="private-fact">
+        <div class="private-fact-val">0</div>
+        <div class="private-fact-label">Accounts required</div>
+      </div>
+      <div class="private-fact">
+        <div class="private-fact-val">Offline</div>
+        <div class="private-fact-label">Works anywhere, always</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="download">
+  <div class="cta-inner">
+    <div class="cta-pre">// free download - nothing leaves your device</div>
+    <div class="cta-h">More answers.</div>
+    <div class="cta-h-sub">Less searching.</div>
+    <p class="cta-body">Free. Private. Local. Fae lives on your iPhone and Mac, works offline, and never shares what you tell her. No account. No subscription. No catch.</p>
+    <div class="cta-stores">
+      <a href="#" class="store-btn">
+        <svg class="store-icon" width="24" height="28" viewBox="0 0 24 28" fill="none"><path d="M20.02 14.88c-.03-3.25 2.66-4.82 2.78-4.89-1.52-2.22-3.88-2.52-4.72-2.56-2-.21-3.93 1.19-4.95 1.19-1.03 0-2.6-1.17-4.28-1.13-2.18.03-4.21 1.28-5.33 3.23-2.29 3.96-.58 9.79 1.63 13 1.09 1.57 2.37 3.32 4.06 3.26 1.64-.07 2.25-1.05 4.23-1.05 1.97 0 2.54 1.05 4.27 1.01 1.76-.03 2.87-1.58 3.93-3.17 1.25-1.81 1.76-3.58 1.78-3.67-.04-.01-3.4-1.31-3.4-5.22zm-3.18-9.6c.9-1.09 1.5-2.6 1.34-4.11-1.29.05-2.87.86-3.8 1.93-.83.96-1.56 2.5-1.37 3.97 1.44.11 2.91-.73 3.83-1.79z" fill="rgba(255,245,235,0.9)"/></svg>
+        <div class="store-label">
+          <span class="store-sub">Download on the</span>
+          <span class="store-name">Mac App Store</span>
+        </div>
+      </a>
+      <a href="#" class="store-btn">
+        <svg class="store-icon" width="24" height="28" viewBox="0 0 24 28" fill="none"><path d="M20.02 14.88c-.03-3.25 2.66-4.82 2.78-4.89-1.52-2.22-3.88-2.52-4.72-2.56-2-.21-3.93 1.19-4.95 1.19-1.03 0-2.6-1.17-4.28-1.13-2.18.03-4.21 1.28-5.33 3.23-2.29 3.96-.58 9.79 1.63 13 1.09 1.57 2.37 3.32 4.06 3.26 1.64-.07 2.25-1.05 4.23-1.05 1.97 0 2.54 1.05 4.27 1.01 1.76-.03 2.87-1.58 3.93-3.17 1.25-1.81 1.76-3.58 1.78-3.67-.04-.01-3.4-1.31-3.4-5.22zm-3.18-9.6c.9-1.09 1.5-2.6 1.34-4.11-1.29.05-2.87.86-3.8 1.93-.83.96-1.56 2.5-1.37 3.97 1.44.11 2.91-.73 3.83-1.79z" fill="rgba(255,245,235,0.9)"/></svg>
+        <div class="store-label">
+          <span class="store-sub">Download on the</span>
+          <span class="store-name">iPhone App Store</span>
+        </div>
+      </a>
+    </div>
+    <div class="cta-small">// macOS 13+ · iPhone · Works offline · Zero data shared · Zero cost</div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">F<span>ae</span></div>
+  <div class="footer-links">
+    <a href="#">Privacy</a>
+    <a href="#">About</a>
+    <a href="#">Download</a>
+  </div>
+  <div class="footer-credit">Created by Saorsa Labs | For Autonomi</div>
+</footer>
+
+<script>
+  // ── DARK MODE ──
+  const KEY6 = 'fae6-mode';
+  const btn6 = document.getElementById('modeBtn6');
+  function setMode6(dark) {
+    document.body.classList.toggle('dark-mode', dark);
+    btn6.textContent = dark ? '[ Light ]' : '[ Dark ]';
+    localStorage.setItem(KEY6, dark ? 'dark' : 'light');
+  }
+  function toggleMode6() { setMode6(!document.body.classList.contains('dark-mode')); }
+  (function() {
+    const saved = localStorage.getItem(KEY6);
+    if (saved === 'dark') setMode6(true);
+    else if (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches) setMode6(true);
+  })();
+
+  // ── ORB ──
+  (function() {
+    const oc = document.getElementById('orbCanvas6');
+    const pc = document.getElementById('pulseCanvas6');
+    if (!oc || !pc) return;
+    const ctx = oc.getContext('2d');
+    const pctx = pc.getContext('2d');
+    const DPR = window.devicePixelRatio || 1;
+    const S = 110, PS = 220;
+    oc.width = S * DPR; oc.height = S * DPR; ctx.scale(DPR, DPR);
+    pc.width = PS * DPR; pc.height = PS * DPR; pctx.scale(DPR, DPR);
+
+    // page 6 - warm terra/amber only, no green
+    const PALETTE_DARK = [
+      [217,87,43],    // terra
+      [232,168,71],   // amber/sun
+      [195,65,28],    // deep terra
+      [245,190,100],  // warm gold
+      [217,87,43],    // terra (weighted)
+    ];
+    const PALETTE_LIGHT = [
+      [217,87,43],    // terra
+      [232,168,71],   // amber
+      [195,65,28],    // deep terra
+      [245,166,35],   // sun
+      [180,55,20],    // brick
+    ];
+
+    function getPalette() {
+      return document.body.classList.contains('dark-mode') ? PALETTE_DARK : PALETTE_LIGHT;
+    }
+
+    let t = 0;
+    let cr = 217, cg = 87, cb = 43;
+    let tr = cr, tg = cg, tb = cb;
+    let morphTimer = 0;
+
+    function nextTarget() {
+      const PAL = getPalette();
+      const p = PAL[Math.floor(Math.random() * PAL.length)];
+      tr = p[0]; tg = p[1]; tb = p[2];
+    }
+    nextTarget();
+
+    function drawOrb() {
+      ctx.clearRect(0, 0, S, S);
+      morphTimer++;
+      if (morphTimer > 160) { nextTarget(); morphTimer = 0; }
+      cr += (tr - cr) * 0.007;
+      cg += (tg - cg) * 0.007;
+      cb += (tb - cb) * 0.007;
+
+      const cx = S / 2, cy = S / 2, r = S / 2 - 1;
+      const isDark = document.body.classList.contains('dark-mode');
+
+      // ── BASE: flat solid fill, no radial ──
+      ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      if (isDark) {
+        ctx.fillStyle = `rgba(${(cr*0.18)|0},${(cg*0.10)|0},${(cb*0.06)|0},1)`;
+      } else {
+        ctx.fillStyle = `rgba(253,247,238,1)`;
+      }
+      ctx.fill();
+
+      // ── PRIMARY BLOB: very large (r*1.4) - always bleeds past the circle edge ──
+      // Centre drifts slowly across a small range so the visible fill portion
+      // constantly shifts - you never see the blob's own boundary, only its interior
+      const bx = cx + Math.cos(t * 0.13) * r * 0.35;
+      const by = cy + Math.sin(t * 0.17) * r * 0.30;
+      const blobR = r * 1.4; // bigger than the orb itself
+
+      const g1 = ctx.createRadialGradient(bx, by, 0, bx, by, blobR);
+      g1.addColorStop(0,   `rgba(${cr|0},${cg|0},${cb|0},0.72)`);
+      g1.addColorStop(0.4, `rgba(${cr|0},${cg|0},${cb|0},0.45)`);
+      g1.addColorStop(0.75,`rgba(${cr|0},${cg|0},${cb|0},0.12)`);
+      g1.addColorStop(1,   'rgba(0,0,0,0)');
+      ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.fillStyle = g1; ctx.fill();
+
+      // ── SECONDARY BLOB: shifted amber tone, orbits opposite side slowly ──
+      const ar = Math.min(255, (cr + 32)|0);
+      const ag = Math.min(255, (cg + 62)|0);
+      const ab = Math.min(255, (cb + 18)|0);
+      const bx2 = cx + Math.cos(t * 0.11 + 3.14) * r * 0.38;
+      const by2 = cy + Math.sin(t * 0.15 + 2.0)  * r * 0.32;
+      const g2 = ctx.createRadialGradient(bx2, by2, 0, bx2, by2, r * 1.1);
+      g2.addColorStop(0,   `rgba(${ar},${ag},${ab},0.38)`);
+      g2.addColorStop(0.6, `rgba(${ar},${ag},${ab},0.10)`);
+      g2.addColorStop(1,   'rgba(0,0,0,0)');
+      ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.fillStyle = g2; ctx.fill();
+
+      // ── SOFT EDGE VIGNETTE: just dims the boundary slightly ──
+      const vig = ctx.createRadialGradient(cx, cy, r * 0.6, cx, cy, r);
+      vig.addColorStop(0, 'rgba(0,0,0,0)');
+      vig.addColorStop(1, isDark ? 'rgba(0,0,0,0.28)' : 'rgba(160,80,20,0.07)');
+      ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.fillStyle = vig; ctx.fill();
+
+      // ── PULSE CANVAS: wide even ambient halo ──
+      pctx.clearRect(0, 0, PS, PS);
+      const pulseA = (Math.sin(t * 0.38) * 0.5 + 0.5) * 0.08;
+      const pg = pctx.createRadialGradient(PS/2, PS/2, PS * 0.22, PS/2, PS/2, PS/2);
+      pg.addColorStop(0,   `rgba(${cr|0},${cg|0},${cb|0},${pulseA})`);
+      pg.addColorStop(0.65,`rgba(${cr|0},${cg|0},${cb|0},${pulseA * 0.3})`);
+      pg.addColorStop(1,   'rgba(0,0,0,0)');
+      pctx.beginPath(); pctx.arc(PS/2, PS/2, PS/2, 0, Math.PI*2);
+      pctx.fillStyle = pg; pctx.fill();
+
+      t += 0.014;
+      requestAnimationFrame(drawOrb);
+    }
+    drawOrb();
+  })();
+
+  // ── SCENE SWITCHER ──
+  let currentScene6 = 1;
+  let sceneRunning6 = false;
+
+  function switchScene6(n) {
+    if (n === currentScene6) return;
+    document.querySelectorAll('.chat-scene').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.scene-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('sc6-' + n).classList.add('active');
+    document.getElementById('tab6-' + n).classList.add('active');
+    currentScene6 = n;
+    resetScene6(n);
+    setTimeout(() => runScene6(n), 400);
+  }
+
+  const scenes6 = [
+    {
+      id: 'sc6-1',
+      inputs: ["we're at home for the week - kids are 6 and 9. ideas that cost nearly nothing but genuinely tire them out?", "yes please"],
+      seq: ['s6-1u1','s6-1d1','s6-1f1','s6-1u2','s6-1d2','s6-1f2'],
+      hasList: false
+    },
+    {
+      id: 'sc6-2',
+      inputs: ["my daughter has a piece on the water cycle due tomorrow and i can't really remember how it works - can you help me help her?", "brilliant - and some questions i can ask her after to check she's got it?"],
+      seq: ['s6-2u1','s6-2d1','s6-2s1','s6-2f1','s6-2u2','s6-2d2','s6-2f2'],
+      hasList: false
+    },
+    {
+      id: 'sc6-3',
+      inputs: ["between school runs, clubs, shopping and errands i'm feeling a bit overwhelmed - can you help me get on top of it?", "two kids, three clubs across the week, one car in the daytime, shopping needs doing tuesday or thursday"],
+      seq: ['s6-3u1','s6-3d1','s6-3f1','s6-3u2','s6-3d2','s6-3f2'],
+      hasList: false
+    }
+  ];
+
+  function resetScene6(n) {
+    const scene = scenes6[n - 1];
+    scene.seq.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.classList.remove('show');
+      if (el.classList.contains('typing')) { /* keep hidden */ }
+    });
+    const typed = document.getElementById('winTyped6');
+    const ph = document.getElementById('winPlaceholder6');
+    if (typed) typed.textContent = '';
+    if (ph) ph.style.opacity = '1';
+  }
+
+  function typeText6(text, el, phEl, speed, cb) {
+    if (phEl) phEl.style.opacity = '0';
+    let i = 0;
+    const iv = setInterval(() => {
+      if (i < text.length) { el.textContent += text[i++]; }
+      else { clearInterval(iv); setTimeout(cb, 300); }
+    }, speed);
+  }
+
+  function runScene6(n) {
+    const scene = scenes6[n - 1];
+    const typed = document.getElementById('winTyped6');
+    const ph = document.getElementById('winPlaceholder6');
+    const stateEl = document.getElementById('winState6');
+    const chat = document.querySelector('.chat-float6');
+
+    const steps = [];
+    let inputIdx = 0;
+
+    scene.seq.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (el.classList.contains('msg-user')) {
+        const txt = scene.inputs[inputIdx++] || '';
+        steps.push({ type: 'type', el, txt });
+        steps.push({ type: 'send', el });
+      } else if (el.classList.contains('typing')) {
+        steps.push({ type: 'think', el });
+      } else if (el.classList.contains('msg-search')) {
+        steps.push({ type: 'search', el });
+      } else {
+        steps.push({ type: 'show', el });
+      }
+    });
+
+    let idx = 0;
+    function next() {
+      if (idx >= steps.length) {
+        if (typed) typed.textContent = '';
+        if (ph) ph.style.opacity = '1';
+        if (stateEl) stateEl.textContent = 'Listening...';
+        return;
+      }
+      const step = steps[idx++];
+      if (step.type === 'type') {
+        if (stateEl) stateEl.textContent = '';
+        typeText6(step.txt, typed, ph, 42, next);
+      } else if (step.type === 'send') {
+        step.el.classList.add('show');
+        if (typed) typed.textContent = '';
+        if (ph) ph.style.opacity = '1';
+        chat.scrollTop = chat.scrollHeight;
+        setTimeout(next, 600);
+      } else if (step.type === 'think') {
+        if (stateEl) stateEl.textContent = 'Thinking...';
+        step.el.classList.add('show');
+        chat.scrollTop = chat.scrollHeight;
+        setTimeout(() => {
+          step.el.classList.remove('show');
+          if (stateEl) stateEl.textContent = 'Listening...';
+          next();
+        }, 2200);
+      } else if (step.type === 'search') {
+        step.el.classList.add('show');
+        chat.scrollTop = chat.scrollHeight;
+        setTimeout(next, 1800);
+      } else if (step.type === 'show') {
+        step.el.classList.add('show');
+        chat.scrollTop = chat.scrollHeight;
+        setTimeout(next, step.el.classList.contains('msg-list') ? 1600 : 2000);
+      }
+    }
+    setTimeout(next, 600);
+  }
+
+  // Auto-cycle scenes
+  function autoAdvance6() {
+    const next = currentScene6 < 3 ? currentScene6 + 1 : 1;
+    switchScene6(next);
+  }
+
+  // Start first scene
+  window.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => runScene6(1), 800);
+    setInterval(autoAdvance6, 28000);
+  });
+</script>
+
+<div class="sticky-bar">
+  <span class="sticky-bar-text">Free · Private · Nothing leaves your device</span>
+  <a href="#download" class="sticky-bar-btn">Download Fae</a>
+</div>
+
+</body>
+</html>
