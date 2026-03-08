@@ -1,0 +1,1950 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fae - The one constant in a chaotic life</title>
+<meta name="description" content="Fae lives on your Mac and iPhone. She remembers everything you've told her, helps you think through anything, and nobody else can read a word of it. Free, always.">
+<meta name="keywords" content="AI assistant iPhone Mac, personal AI free, offline AI assistant, private AI no cloud, AI that remembers you, better than ChatGPT personal">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FAF7F2;
+    --cream2: #F3EDE3;
+    --cream3: #EBE3D5;
+    --ink: #1C1917;
+    --ink2: #44403C;
+    --ink3: #78716C;
+    --terra: #D97B5A;
+    --terra2: #C4643E;
+    --terra-pale: rgba(217,123,90,0.1);
+    --terra-mid: rgba(217,123,90,0.2);
+    --warm-white: #FDFBF8;
+    --rule: rgba(28,25,23,0.1);
+    --window-bg: #1E1A18;
+    --window-border: rgba(217,123,90,0.2);
+  }
+
+  [data-theme="dark"] {
+    --cream: #2A1F14;
+    --cream2: #341F0F;
+    --cream3: #3D2A18;
+    --ink: #F0E6D3;
+    --ink2: #D4C4A8;
+    --ink3: #A08060;
+    --terra: #E8916A;
+    --terra2: #D97B5A;
+    --terra-pale: rgba(232,145,106,0.12);
+    --terra-mid: rgba(232,145,106,0.22);
+    --warm-white: #261A10;
+    --rule: rgba(240,230,211,0.08);
+    --window-bg: #1A1008;
+    --window-border: rgba(232,145,106,0.2);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    transition: background 0.4s ease, color 0.4s ease;
+  }
+
+  /* theme toggle button */
+  .theme-toggle {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--rule);
+    background: var(--cream2);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s, border-color 0.2s, transform 0.15s;
+    flex-shrink: 0;
+    color: var(--ink3);
+  }
+  .theme-toggle:hover {
+    background: var(--cream3);
+    transform: rotate(20deg);
+  }
+  .theme-toggle .icon-sun  { display: none; }
+  .theme-toggle .icon-moon { display: block; }
+  [data-theme="dark"] .theme-toggle .icon-sun  { display: block; }
+  [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+
+  /* global smooth theme transition */
+  *, *::before, *::after {
+    box-sizing: border-box;
+    transition: background-color 0.35s ease, color 0.35s ease, border-color 0.35s ease;
+  }
+
+  /* dark mode section overrides - the ink sections flip to deepest brown */
+  [data-theme="dark"] nav {
+    background: rgba(42,31,20,0.94);
+  }
+  [data-theme="dark"] .how-section {
+    background: #1A1008;
+  }
+  [data-theme="dark"] .feel-section {
+    background: #2E1E0F;
+  }
+  [data-theme="dark"] .reassurance-strip {
+    background: #341F0F;
+    border-color: rgba(240,230,211,0.06);
+  }
+  [data-theme="dark"] .cta-section::before {
+    background: radial-gradient(ellipse at 50% 0%, rgba(232,145,106,0.1) 0%, transparent 60%);
+  }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── GRAIN OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(250,247,242,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--rule);
+    padding: 0 48px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-logo {
+    font-family: 'Lora', serif;
+    font-size: 22px;
+    font-weight: 600;
+    font-style: italic;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+
+  .nav-centre {
+    font-size: 12px;
+    color: var(--ink3);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .nav-link {
+    font-size: 14px;
+    color: var(--ink3);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-link:hover { color: var(--ink); }
+
+  .nav-cta {
+    background: var(--terra);
+    color: white;
+    border: none;
+    padding: 9px 22px;
+    border-radius: 100px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+    letter-spacing: 0.01em;
+  }
+  .nav-cta:hover { background: var(--terra2); transform: translateY(-1px); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    padding: 80px 48px 60px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* subtle warm radial bg */
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -20%;
+    right: -10%;
+    width: 70vw;
+    height: 70vw;
+    background: radial-gradient(ellipse, rgba(217,123,90,0.08) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -10%;
+    left: -5%;
+    width: 50vw;
+    height: 50vw;
+    background: radial-gradient(ellipse, rgba(217,123,90,0.05) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  .hero-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-left {
+    opacity: 0;
+    animation: fadeUp 0.7s 0.1s ease forwards;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--terra);
+    margin-bottom: 28px;
+    font-weight: 500;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--terra);
+  }
+
+  .hero-h1 {
+    font-family: 'Lora', serif;
+    font-size: clamp(38px, 4.5vw, 62px);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 28px;
+  }
+
+  .hero-h1 em {
+    font-style: italic;
+    color: var(--terra);
+  }
+
+  .hero-body {
+    font-size: 17px;
+    line-height: 1.75;
+    color: var(--ink2);
+    margin-bottom: 36px;
+    max-width: 480px;
+    font-weight: 300;
+  }
+
+  .hero-body strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  /* pill row */
+  .pill-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 40px;
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--cream2);
+    border: 1px solid var(--cream3);
+    padding: 7px 14px;
+    border-radius: 100px;
+    font-size: 13px;
+    color: var(--ink2);
+    font-weight: 400;
+  }
+  .pill .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--terra);
+    flex-shrink: 0;
+  }
+
+  .cta-group {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .cta-primary {
+    background: var(--ink);
+    color: var(--cream);
+    border: none;
+    padding: 16px 36px;
+    border-radius: 100px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    letter-spacing: 0.01em;
+  }
+  .cta-primary:hover { background: var(--terra); transform: translateY(-2px); }
+
+  .cta-sub {
+    font-size: 13px;
+    color: var(--ink3);
+    font-style: italic;
+  }
+
+  /* ── DESKTOP WINDOW GRAPHIC ── */
+  .hero-right {
+    opacity: 0;
+    animation: fadeUp 0.7s 0.3s ease forwards;
+  }
+
+  .fae-ui-wrap {
+    display: flex;
+    flex-direction: column;
+    filter: drop-shadow(0 40px 80px rgba(28,25,23,0.18));
+  }
+
+  /* titlebar */
+  .fae-titlebar {
+    width: 100%;
+    box-sizing: border-box;
+    background: #2C2420;
+    border: 1px solid rgba(217,123,90,0.15);
+    border-bottom: 1px solid rgba(217,123,90,0.08);
+    border-radius: 12px 12px 0 0;
+    padding: 11px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .fae-traffic {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .fae-traffic span {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+  }
+  .fae-traffic .tc-r { background: #ff5f57; }
+  .fae-traffic .tc-y { background: #ffbd2e; }
+  .fae-traffic .tc-g { background: #28c840; }
+
+  .fae-titlebar-name {
+    flex: 1;
+    text-align: center;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: rgba(250,247,242,0.3);
+  }
+
+  .fae-titlebar-badge {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px;
+    color: rgba(217,123,90,0.5);
+    letter-spacing: 0.06em;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* window body */
+  .fae-window {
+    width: 100%;
+    height: 560px;
+    background: #1E1A18;
+    border: 1px solid rgba(217,123,90,0.12);
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* orb header strip */
+  .fae-header {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 18px 10px;
+    border-bottom: 1px solid rgba(250,247,242,0.05);
+    position: relative;
+    z-index: 2;
+  }
+
+  .fae-orb-area {
+    position: relative;
+    width: 70px; height: 70px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  #orbCanvas2 {
+    position: absolute;
+    width: 50px; height: 50px;
+    border-radius: 50%;
+    z-index: 2;
+  }
+  #pulseCanvas2 {
+    position: absolute;
+    width: 110px; height: 110px;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .fae-aura {
+    position: absolute; border-radius: 50%; pointer-events: none;
+  }
+  .fae-aura-1 {
+    width: 56px; height: 56px;
+    border: 1px solid rgba(217,123,90,0.15);
+    animation: auraP 8s ease-in-out infinite;
+  }
+  .fae-aura-2 {
+    width: 68px; height: 68px;
+    border: 1px solid rgba(217,123,90,0.06);
+    animation: auraP 8s ease-in-out infinite 2.5s;
+  }
+  @keyframes auraP {
+    0%,100% { transform: scale(1); opacity: 1; }
+    50%      { transform: scale(1.06); opacity: 0.4; }
+  }
+
+  .fae-header-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .fae-state {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    color: rgba(217,123,90,0.7);
+    min-height: 18px;
+    font-style: italic;
+  }
+
+  /* chat */
+  .fae-chat {
+    flex: 1;
+    padding: 14px 18px 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 8px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    position: relative;
+  }
+  .fae-chat::-webkit-scrollbar { display: none; }
+
+  .fae-chat::after {
+    content: "";
+    position: absolute;
+    bottom: 0; left: 0; right: 0; height: 28px;
+    background: linear-gradient(to top, rgba(30,26,24,0.95), transparent);
+    pointer-events: none; z-index: 1;
+  }
+
+  .fae-scene {
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .fae-scene.active { display: flex; }
+
+  .fae-msg {
+    max-width: 82%;
+    padding: 10px 14px;
+    border-radius: 14px;
+    font-size: 13px;
+    line-height: 1.6;
+    opacity: 0;
+    transition: opacity 0.4s ease, transform 0.35s ease;
+    transform: translateY(5px);
+  }
+  .fae-msg.show { opacity: 1; transform: translateY(0); }
+
+  .fae-msg-user {
+    align-self: flex-end;
+    background: rgba(217,123,90,0.18);
+    border: 1px solid rgba(217,123,90,0.28);
+    color: rgba(250,247,242,0.9);
+    font-family: 'DM Sans', sans-serif;
+    border-bottom-right-radius: 3px;
+  }
+
+  .fae-msg-fae {
+    align-self: flex-start;
+    background: rgba(250,247,242,0.06);
+    border: 1px solid rgba(250,247,242,0.08);
+    color: rgba(250,247,242,0.65);
+    font-family: 'Lora', serif;
+    font-size: 12.5px;
+    font-style: italic;
+    border-bottom-left-radius: 3px;
+  }
+
+  .fae-dots {
+    align-self: flex-start;
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    padding: 9px 13px;
+    background: rgba(250,247,242,0.04);
+    border: 1px solid rgba(250,247,242,0.06);
+    border-radius: 14px;
+    border-bottom-left-radius: 3px;
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+  .fae-dots.show { opacity: 1; }
+  .fae-dots span {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: rgba(217,123,90,0.5);
+    animation: dotBounce 1.1s ease-in-out infinite;
+  }
+  .fae-dots span:nth-child(2) { animation-delay: 0.18s; }
+  .fae-dots span:nth-child(3) { animation-delay: 0.36s; }
+  @keyframes dotBounce {
+    0%,60%,100% { transform: translateY(0); opacity: 0.4; }
+    30%          { transform: translateY(-5px); opacity: 1; }
+  }
+
+  /* input bar */
+  .fae-input-bar {
+    flex-shrink: 0;
+    margin: 6px 14px 14px;
+    background: rgba(250,247,242,0.05);
+    border: 1px solid rgba(217,123,90,0.18);
+    border-radius: 8px;
+    padding: 10px 13px;
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+  }
+
+  .fae-mic-btn {
+    width: 22px; height: 22px;
+    background: rgba(217,123,90,0.12);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .fae-input-field {
+    flex: 1;
+    position: relative;
+    min-height: 16px;
+  }
+  .fae-placeholder {
+    position: absolute; top: 0; left: 0;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    color: rgba(250,247,242,0.2);
+    line-height: 1.5;
+    pointer-events: none;
+    transition: opacity 0.15s;
+    white-space: nowrap;
+    font-style: italic;
+  }
+  .fae-typed {
+    display: block;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    color: rgba(250,247,242,0.85);
+    line-height: 1.5;
+    white-space: normal;
+    word-break: break-word;
+  }
+  .fae-caret {
+    display: inline-block;
+    width: 1px; height: 12px;
+    background: rgba(217,123,90,0.8);
+    margin-left: 1px;
+    vertical-align: middle;
+    opacity: 0;
+    animation: caretBlink 0.85s step-end infinite;
+  }
+  @keyframes caretBlink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  /* privacy badge below window */
+  .fae-privacy-badge {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    color: rgba(217,123,90,0.45);
+    letter-spacing: 0.06em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+    padding-left: 2px;
+    font-style: italic;
+  }
+
+  /* ── MOMENTS SECTION ── */
+  .moments {
+    padding: 100px 48px;
+    background: var(--warm-white);
+    position: relative;
+  }
+
+  .moments-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .moments-header {
+    text-align: center;
+    margin-bottom: 72px;
+  }
+
+  .section-eyebrow {
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--terra);
+    margin-bottom: 16px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  .section-eyebrow::before,
+  .section-eyebrow::after {
+    content: '';
+    width: 32px;
+    height: 1px;
+    background: var(--terra);
+    opacity: 0.4;
+  }
+
+  .section-h {
+    font-family: 'Lora', serif;
+    font-size: clamp(28px, 3.5vw, 44px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    color: var(--ink);
+  }
+
+  .section-h em {
+    font-style: italic;
+    color: var(--terra);
+  }
+
+  .moments-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+
+  .moment-card {
+    background: var(--cream);
+    padding: 44px 36px;
+    position: relative;
+    border: 1px solid var(--rule);
+    transition: background 0.3s;
+  }
+  .moment-card:hover { background: var(--cream2); }
+  .moment-card:first-child { border-radius: 12px 0 0 12px; }
+  .moment-card:last-child { border-radius: 0 12px 12px 0; }
+
+  .moment-number {
+    font-family: 'Lora', serif;
+    font-size: 64px;
+    font-weight: 700;
+    color: rgba(217,123,90,0.08);
+    line-height: 1;
+    position: absolute;
+    top: 24px;
+    right: 24px;
+  }
+
+  .moment-icon {
+    width: 44px; height: 44px;
+    background: var(--terra-pale);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 20px;
+    font-size: 20px;
+  }
+
+  .moment-title {
+    font-family: 'Lora', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 12px;
+    line-height: 1.3;
+  }
+
+  .moment-body {
+    font-size: 14px;
+    color: var(--ink2);
+    line-height: 1.75;
+    font-weight: 300;
+  }
+
+  .moment-quote {
+    margin-top: 20px;
+    padding: 14px 18px;
+    background: var(--cream2);
+    border-left: 2px solid var(--terra);
+    border-radius: 0 6px 6px 0;
+    font-family: 'Lora', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--ink2);
+    line-height: 1.6;
+  }
+
+  /* ── PRIVACY SECTION ── */
+  .privacy {
+    padding: 100px 48px;
+    background: var(--ink);
+    color: var(--cream);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .privacy::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(ellipse at 80% 50%, rgba(217,123,90,0.06) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .privacy-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 100px;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .privacy-left {}
+
+  .privacy-left .section-eyebrow {
+    justify-content: flex-start;
+    color: var(--terra);
+  }
+  .privacy-left .section-eyebrow::before { display: none; }
+
+  .privacy-h {
+    font-family: 'Lora', serif;
+    font-size: clamp(28px, 3vw, 42px);
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--cream);
+    margin-bottom: 24px;
+  }
+
+  .privacy-h em {
+    font-style: italic;
+    color: var(--terra);
+  }
+
+  .privacy-body {
+    font-size: 16px;
+    color: rgba(250,247,242,0.6);
+    line-height: 1.8;
+    margin-bottom: 36px;
+    font-weight: 300;
+  }
+
+  .privacy-points {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .privacy-point {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    font-size: 14px;
+    color: rgba(250,247,242,0.7);
+    line-height: 1.6;
+  }
+
+  .privacy-point-icon {
+    width: 28px; height: 28px;
+    background: rgba(217,123,90,0.12);
+    border: 1px solid rgba(217,123,90,0.2);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* right side - stats */
+  .privacy-right {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .stat-block {
+    padding: 28px 32px;
+    background: rgba(250,247,242,0.03);
+    border: 1px solid rgba(250,247,242,0.06);
+    transition: background 0.3s;
+  }
+  .stat-block:hover { background: rgba(250,247,242,0.06); }
+  .stat-block:first-child { border-radius: 8px 8px 0 0; }
+  .stat-block:last-child { border-radius: 0 0 8px 8px; }
+
+  .stat-num {
+    font-family: 'Lora', serif;
+    font-size: 40px;
+    font-weight: 700;
+    color: var(--terra);
+    line-height: 1;
+    margin-bottom: 6px;
+    letter-spacing: -0.02em;
+  }
+
+  .stat-label {
+    font-size: 13px;
+    color: rgba(250,247,242,0.5);
+    line-height: 1.5;
+    font-weight: 300;
+  }
+
+  /* ── TESTIMONIALS / FEEL ── */
+  /* ── HOW SHE WORKS ── */
+  .how-section {
+    padding: 100px 48px;
+    background: var(--ink);
+    color: var(--cream);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .how-section::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      radial-gradient(ellipse at 10% 20%, rgba(217,123,90,0.07) 0%, transparent 50%),
+      radial-gradient(ellipse at 90% 80%, rgba(217,123,90,0.04) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .how-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .how-header {
+    max-width: 680px;
+    margin-bottom: 60px;
+  }
+
+  .how-header .section-eyebrow {
+    justify-content: flex-start;
+    color: var(--terra);
+  }
+  .how-header .section-eyebrow::before,
+  .how-header .section-eyebrow::after { display: none; }
+
+  .how-header .section-h {
+    color: var(--cream);
+    margin-bottom: 20px;
+  }
+
+  .how-intro {
+    font-size: 17px;
+    color: rgba(250,247,242,0.5);
+    line-height: 1.75;
+    font-weight: 300;
+  }
+
+  .how-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr;
+    gap: 2px;
+    margin-bottom: 40px;
+    align-items: stretch;
+  }
+
+  .how-card {
+    background: rgba(250,247,242,0.03);
+    border: 1px solid rgba(250,247,242,0.07);
+    padding: 36px 32px;
+    transition: background 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .how-card:first-child { border-radius: 8px 0 0 8px; }
+  .how-card:last-child  { border-radius: 0 8px 8px 0; }
+  .how-card:hover { background: rgba(250,247,242,0.06); }
+
+  .how-card--lead {
+    border-color: rgba(217,123,90,0.2);
+    background: rgba(217,123,90,0.05);
+  }
+  .how-card--lead:hover { background: rgba(217,123,90,0.09); }
+
+  .how-card-icon {
+    width: 40px; height: 40px;
+    background: rgba(217,123,90,0.1);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 20px;
+    color: var(--terra);
+  }
+
+  .how-card-title {
+    font-family: 'Lora', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--cream);
+    margin-bottom: 12px;
+    line-height: 1.3;
+  }
+
+  .how-card-body {
+    font-size: 14px;
+    color: rgba(250,247,242,0.55);
+    line-height: 1.8;
+    font-weight: 300;
+  }
+
+  /* worked example */
+  .how-example {
+    background: rgba(250,247,242,0.03);
+    border: 1px solid rgba(250,247,242,0.07);
+    border-radius: 8px;
+    padding: 32px 36px;
+  }
+
+  .how-example-label {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--terra);
+    margin-bottom: 24px;
+    opacity: 0.8;
+  }
+
+  .how-example-steps {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .how-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    flex: 1;
+    min-width: 160px;
+  }
+
+  .how-step-num {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: rgba(217,123,90,0.15);
+    border: 1px solid rgba(217,123,90,0.25);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--terra);
+    flex-shrink: 0;
+  }
+
+  .how-step-text {
+    font-size: 13px;
+    color: rgba(250,247,242,0.55);
+    line-height: 1.6;
+    font-weight: 300;
+    padding-top: 3px;
+  }
+
+  .how-step-arrow {
+    flex-shrink: 0;
+    padding-top: 4px;
+  }
+
+  /* ── REASSURANCE STRIP ── */
+  .reassurance-strip {
+    background: var(--cream2);
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    padding: 20px 48px;
+  }
+
+  .reassurance-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .reassurance-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--ink3);
+    font-weight: 400;
+    letter-spacing: 0.01em;
+  }
+
+  .reassurance-item svg {
+    color: var(--terra);
+    opacity: 0.7;
+    flex-shrink: 0;
+  }
+
+  .reassurance-dot {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--cream3);
+    flex-shrink: 0;
+  }
+
+  /* ── FEEL SECTION ── */
+  .feel-section {
+    padding: 100px 48px;
+    background: var(--cream2);
+  }
+
+  .feel-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .feel-inner .section-h {
+    margin-bottom: 56px;
+  }
+
+  .pull-quote {
+    font-family: 'Lora', serif;
+    font-size: clamp(22px, 2.5vw, 32px);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--ink);
+    line-height: 1.5;
+    margin-bottom: 20px;
+    position: relative;
+    padding: 0 40px;
+  }
+
+  .pull-quote::before {
+    content: '\201C';
+    position: absolute;
+    left: 0; top: -10px;
+    font-size: 80px;
+    color: var(--terra);
+    opacity: 0.2;
+    line-height: 1;
+    font-family: 'Lora', serif;
+  }
+
+  .pull-source {
+    font-size: 13px;
+    color: var(--ink3);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .feel-resolution {
+    font-family: 'Lora', serif;
+    font-size: 16px; font-style: italic;
+    color: var(--ink3);
+    text-align: center;
+    max-width: 520px; margin: 0 auto;
+    line-height: 1.8;
+  }
+  .feel-divider {
+    width: 40px;
+    height: 1px;
+    background: var(--terra);
+    opacity: 0.3;
+    margin: 32px auto;
+  }
+
+  /* ── FINAL CTA ── */
+  .cta-section {
+    padding: 120px 48px;
+    background: var(--cream);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(217,123,90,0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .cta-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .cta-h {
+    font-family: 'Lora', serif;
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 600;
+    font-style: italic;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    color: var(--ink);
+    margin-bottom: 20px;
+  }
+
+  .cta-body {
+    font-size: 16px;
+    color: var(--ink3);
+    line-height: 1.7;
+    margin-bottom: 44px;
+    font-weight: 300;
+  }
+
+  .cta-btn-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--terra);
+    color: white;
+    padding: 18px 48px;
+    border-radius: 100px;
+    font-family: 'Lora', serif;
+    font-style: italic;
+    font-size: 20px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.25s;
+    letter-spacing: -0.01em;
+  }
+  .cta-btn:hover { background: var(--terra2); transform: translateY(-3px); box-shadow: 0 16px 40px rgba(217,123,90,0.3); }
+
+  .cta-sub {
+    font-size: 12px;
+    color: var(--ink3);
+    letter-spacing: 0.06em;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink);
+    color: rgba(250,247,242,0.35);
+    padding: 32px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+  }
+
+  .footer-logo {
+    font-family: 'Lora', serif;
+    font-style: italic;
+    font-size: 18px;
+    font-weight: 500;
+    color: rgba(250,247,242,0.6);
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 24px;
+  }
+  .footer-links a {
+    color: rgba(250,247,242,0.3);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: rgba(250,247,242,0.6); }
+
+  .footer-r { color: rgba(250,247,242,0.2); }
+
+  @media (max-width: 900px) {
+    .hero-inner, .privacy-inner { grid-template-columns: 1fr; gap: 48px; }
+    .moments-grid { grid-template-columns: 1fr; }
+    nav, .hero, .moments, .privacy, .how-section, .feel-section, .cta-section { padding-left: 24px; padding-right: 24px; }
+    .how-grid { grid-template-columns: 1fr; }
+    .how-example-steps { flex-direction: column; }
+    .how-step-arrow { transform: rotate(90deg); }
+    footer { flex-direction: column; gap: 16px; text-align: center; }
+  }
+
+  /* ── MOOD FRAME ── */
+  .mood-frame {
+    font-family: 'Lora', serif;
+    font-size: 15px; font-style: italic;
+    color: rgba(200,160,130,0.7);
+    text-align: center; margin-bottom: 20px;
+    letter-spacing: 0.01em;
+  }
+
+  /* ── STARTER PROMPTS ── */
+  .starter-prompts {
+    display: flex; align-items: center; gap: 8px;
+    flex-wrap: wrap; justify-content: center;
+    margin-top: 14px; padding: 0 4px;
+  }
+  .starter-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px; letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(180,130,100,0.5);
+    white-space: nowrap;
+  }
+  .starter-chip {
+    padding: 5px 12px;
+    background: rgba(217,123,90,0.07);
+    border: 1px solid rgba(217,123,90,0.18);
+    border-radius: 50px;
+    font-size: 11px; color: var(--terra);
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+  .starter-chip:hover {
+    background: rgba(217,123,90,0.14);
+    border-color: rgba(217,123,90,0.35);
+  }
+
+  /* ── BUBBLE ENTRY ANIMATION ── */
+  @keyframes bubbleIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .msg-user, .msg-fae, .msg-list {
+    animation: bubbleIn 0.18s ease-out both;
+  }
+
+  /* ── USER QUOTE BAND ── */
+  .user-quote-band {
+    padding: 72px 48px;
+    background: var(--cream);
+    border-top: 1px solid rgba(217,123,90,0.1);
+    border-bottom: 1px solid rgba(217,123,90,0.1);
+  }
+  [data-theme="dark"] .user-quote-band {
+    background: var(--bg2);
+    border-color: rgba(217,123,90,0.08);
+  }
+  .user-quote-inner {
+    max-width: 640px; margin: 0 auto;
+    text-align: center;
+    position: relative;
+  }
+  .user-quote-mark {
+    font-family: 'Lora', serif;
+    font-size: 72px; line-height: 0.6;
+    color: var(--terra); opacity: 0.18;
+    margin-bottom: 16px;
+    display: block;
+    user-select: none;
+  }
+  .user-quote-text {
+    font-family: 'Lora', serif;
+    font-size: clamp(17px, 2vw, 22px);
+    font-style: italic; font-weight: 400;
+    color: var(--ink); line-height: 1.7;
+    margin-bottom: 20px;
+  }
+  .user-quote-attr {
+    font-size: 12px; font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--terra); opacity: 0.7;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Fae</div>
+  <div class="nav-centre">For the ones who carry a lot</div>
+  <div class="nav-right">
+    <a href="#moments" class="nav-link">What she does</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+      <svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+      <svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+    <a href="#download" class="nav-cta">Meet Fae</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+
+    <div class="hero-left">
+      <div class="hero-eyebrow">Always yours. Always private.</div>
+
+      <h1 class="hero-h1">
+        The one constant<br>
+        in a <em>chaotic life.</em>
+      </h1>
+
+      <p class="hero-body">
+        The day has a lot in it. Work, people, money, decisions, things half-done. <strong>Fae sits alongside it all</strong> - quietly helpful, never overwhelming. She lives entirely on your Mac and iPhone, remembers everything you've shared with her, and nobody else can ever read a word of it.
+      </p>
+
+      <div class="pill-row">
+        <div class="pill"><div class="dot"></div> Remembers you across every conversation</div>
+        <div class="pill"><div class="dot"></div> Works without Wi-Fi</div>
+        <div class="pill"><div class="dot"></div> Nobody reads your conversations. Ever.</div>
+        <div class="pill"><div class="dot"></div> Free - no subscription, no catch</div>
+      </div>
+
+      <div class="cta-group">
+        <a href="#download" class="cta-primary">
+          Meet Fae - free
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <span class="cta-sub">macOS 13+ · iPhone · Always free</span>
+      </div>
+    </div>
+
+    <!-- DESKTOP WINDOW -->
+    <div class="hero-right">
+      <div class="fae-ui-wrap">
+
+        <div class="fae-titlebar">
+          <div class="fae-traffic">
+            <span class="tc-r"></span>
+            <span class="tc-y"></span>
+            <span class="tc-g"></span>
+          </div>
+          <div class="fae-titlebar-name">Fae - your space</div>
+          <div class="fae-titlebar-badge">
+            <svg width="7" height="7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+            just you
+          </div>
+        </div>
+
+        <div class="fae-window">
+          <div class="fae-header">
+            <div class="fae-orb-area">
+              <div class="fae-aura fae-aura-1"></div>
+              <div class="fae-aura fae-aura-2"></div>
+              <canvas id="pulseCanvas2" width="220" height="220"></canvas>
+              <canvas id="orbCanvas2" width="100" height="100"></canvas>
+            </div>
+            <div class="fae-header-meta">
+              <div class="fae-state" id="faeState2"></div>
+            </div>
+          </div>
+
+          <div class="fae-chat">
+
+            <!-- Scene 1: Sunday spiral -->
+            <div class="fae-scene" id="sc2-1">
+              <div class="fae-msg fae-msg-user" id="s1u1">I've done nothing all weekend and I feel terrible about it</div>
+              <div class="fae-dots" id="s1d1"><span></span><span></span><span></span></div>
+              <div class="fae-msg fae-msg-fae" id="s1f1">You also finished the project handover on Friday, replied to your mum, and cooked twice. That's not nothing. What did you actually want to do this weekend?</div>
+              <div class="fae-msg fae-msg-user" id="s1u2">I wanted to start the side project but I just couldn't</div>
+              <div class="fae-dots" id="s1d2"><span></span><span></span><span></span></div>
+              <div class="fae-msg fae-msg-fae" id="s1f2">You always say that on Sundays. You've started things on Tuesday evenings before - that seems to be your actual rhythm. Want me to block Tuesday at 7pm this week?</div>
+            </div>
+
+            <!-- Scene 2: Tricky email -->
+            <div class="fae-scene" id="sc2-2">
+              <div class="fae-msg fae-msg-user" id="s2u1">I need to email my manager about the raise. I've been putting it off for three weeks</div>
+              <div class="fae-dots" id="s2d1"><span></span><span></span><span></span></div>
+              <div class="fae-msg fae-msg-fae" id="s2f1">I remember - you mentioned it after the project review. You've shipped three things since then. Want a draft that leads with those, keeps it short and doesn't apologise for asking?</div>
+              <div class="fae-msg fae-msg-user" id="s2u2">yes please, no grovelling</div>
+              <div class="fae-dots" id="s2d2"><span></span><span></span><span></span></div>
+              <div class="fae-msg fae-msg-fae" id="s2f2">Done. Three lines, confident tone, opens with the delivery tracking win. Want me to soften it or is direct better for how your manager reads things?</div>
+            </div>
+
+            <!-- Scene 3: Something remembered -->
+            <div class="fae-scene" id="sc2-3">
+              <div class="fae-msg fae-msg-user" id="s3u1">what was that restaurant I said I wanted to try?</div>
+              <div class="fae-dots" id="s3d1"><span></span><span></span><span></span></div>
+              <div class="fae-msg fae-msg-fae" id="s3f1">Brat - you mentioned it three weeks ago when you were planning something for the birthday. You said the tasting menu but weren't sure about the price. Want me to check availability for next Saturday?</div>
+              <div class="fae-msg fae-msg-user" id="s3u2">yes and remind me what the birthday plan was</div>
+              <div class="fae-dots" id="s3d2"><span></span><span></span><span></span></div>
+              <div class="fae-msg fae-msg-fae" id="s3f2">You were thinking dinner for four, then somewhere for a drink after. You mentioned Dandelyan but weren't sure if it was too far. I've got the notes from that conversation if you want them.</div>
+            </div>
+
+          </div>
+
+          <div class="fae-input-bar">
+            <div class="fae-mic-btn">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="rgba(217,123,90,0.8)" stroke-width="2.5" stroke-linecap="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4"/></svg>
+            </div>
+            <div class="fae-input-field">
+              <span class="fae-placeholder" id="faePlaceholder2">Tell Fae anything...</span>
+              <span class="fae-typed" id="faeTyped2"><span class="fae-caret" id="faeCaret2"></span></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="fae-privacy-badge">
+          <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          only you can read this · nothing leaves your device
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- MOMENTS -->
+<section class="moments" id="moments">
+  <div class="moments-inner">
+    <div class="moments-header">
+      <div class="section-eyebrow">What Fae actually does</div>
+      <h2 class="section-h">She shows up for the <em>small things</em> too.</h2>
+    </div>
+
+    <div class="moments-grid">
+      <div class="moment-card">
+        <div class="moment-number">01</div>
+        <div class="moment-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(217,123,90,0.7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+        <div class="moment-title">The things easily forgotten</div>
+        <div class="moment-body">
+          You mentioned it to Fae six weeks ago. She stored it safely, not with Apple, not in the cloud anywhere - just on your device. You don't need the internet to use Fae, and Fae doesn't need the internet to help you.
+        </div>
+        <div class="moment-quote">"What was the name of that book I wanted to read?" - she knows.</div>
+      </div>
+
+      <div class="moment-card">
+        <div class="moment-number">02</div>
+        <div class="moment-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(217,123,90,0.7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+        <div class="moment-title">The keep putting it off email</div>
+        <div class="moment-body">
+          For those times when you have to ask for something, complain about something, or say 'no, sorry' to someone. Fae will create a draft as you, while avoiding unneeded apologies, and feelings of awkwardness.
+        </div>
+        <div class="moment-quote">"You need to sound like me, and navigate this." - done.</div>
+      </div>
+
+      <div class="moment-card">
+        <div class="moment-number">03</div>
+        <div class="moment-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(217,123,90,0.7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+        <div class="moment-title">The helping hand</div>
+        <div class="moment-body">
+          Most of us have more tech than we use well. Fae knows what you have access to and helps you get more from it - setting things up, showing you what's possible, and quietly handling the tasks that eat your time.
+        </div>
+        <div class="moment-quote">"Can you get this to work?" - yes, good to go.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW SHE WORKS -->
+<section class="how-section">
+  <div class="how-inner">
+
+    <div class="how-header">
+      <div class="section-eyebrow">How she works</div>
+      <h2 class="section-h">You shouldn't have to <em>edit yourself</em><br>to use an AI.</h2>
+      <p class="how-intro">There's a small tax you pay every time you use any other AI. A half-second pause before you type, where you decide what version of the truth to share. What to leave out. How to phrase it so it feels less exposing. Fae is the only one where that pause just... goes.</p>
+    </div>
+
+    <div class="how-grid">
+
+      <div class="how-card how-card--lead">
+        <div class="how-card-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </div>
+        <h3 class="how-card-title">She is closed, so you can be open.</h3>
+        <p class="how-card-body">From making your budget work to helping your schedule run smoothly. From the questions that feel silly, to the facts that don't sit right. For the half-baked ideas you're not ready to share, to the thing that keeps you up at night. You can work it through with Fae. She lives entirely on your device - no company, no contract, no one, just you.</p>
+      </div>
+
+      <div class="how-card">
+        <div class="how-card-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+        </div>
+        <h3 class="how-card-title">You're safe, when she is surfing.</h3>
+        <p class="how-card-body">When you ask Fae to book something, check something, or interact with an online tool - she does it without disclosing who you are. She represents your interests, not your identity. The website sees a request. It doesn't see you.</p>
+      </div>
+
+      <div class="how-card">
+        <div class="how-card-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h.01M15 9h.01M9 15h6"/></svg>
+        </div>
+        <h3 class="how-card-title">With permission, not presumption.</h3>
+        <p class="how-card-body">Fae won't do anything on your behalf without your permission. When she needs to take an action - sending something, making a booking, using a tool - she shows you exactly what she's about to do and waits. You stay in control. Always.</p>
+      </div>
+
+    </div>
+
+    <!-- Worked example -->
+    <div class="how-example">
+      <div class="how-example-label">What this looks like in practice</div>
+      <div class="how-example-steps">
+        <div class="how-step">
+          <div class="how-step-num">1</div>
+          <div class="how-step-text">You ask Fae to find somewhere good for dinner on Saturday - something quiet, good for catching up</div>
+        </div>
+        <div class="how-step-arrow">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(217,123,90,0.4)" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+        <div class="how-step">
+          <div class="how-step-num">2</div>
+          <div class="how-step-text">Fae browses restaurant sites and checks availability - no details about you shared yet</div>
+        </div>
+        <div class="how-step-arrow">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(217,123,90,0.4)" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+        <div class="how-step">
+          <div class="how-step-num">3</div>
+          <div class="how-step-text">She brings back three options with times, reviews and a recommendation - and waits</div>
+        </div>
+        <div class="how-step-arrow">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(217,123,90,0.4)" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+        <div class="how-step">
+          <div class="how-step-num">4</div>
+          <div class="how-step-text">You pick one. She books it. Only then does your name go anywhere.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- QUIET REASSURANCE STRIP -->
+<section class="reassurance-strip">
+  <div class="reassurance-inner">
+    <div class="reassurance-item">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+      Lives on your device - nobody else reads a word
+    </div>
+    <div class="reassurance-dot"></div>
+    <div class="reassurance-item">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+      Works without Wi-Fi
+    </div>
+    <div class="reassurance-dot"></div>
+    <div class="reassurance-item">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+      Free - no subscription, no catch
+    </div>
+    <div class="reassurance-dot"></div>
+    <div class="reassurance-item">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18" stroke-width="2.5"/></svg>
+      Mac, iPhone &amp; Apple Watch
+    </div>
+  </div>
+</section>
+
+<section class="user-quote-band">
+  <div class="user-quote-inner">
+    <div class="user-quote-mark">&ldquo;</div>
+    <p class="user-quote-text">I finally said the thing I&#39;d been sitting on for about six months. Just typed it out. Fae just... answered it. Properly. No weird energy, no advice I didn&#39;t ask for. I don&#39;t know why it felt like such a relief but it did.</p>
+    <div class="user-quote-attr">- Priya, 34 &nbsp;&middot;&nbsp; Manchester</div>
+  </div>
+</section>
+
+<section class="feel-section">
+  <div class="feel-inner">
+    <div class="section-eyebrow">What it actually feels like</div>
+    <h2 class="section-h">Not a chatbot. <em>Something closer.</em></h2>
+
+    <div class="feel-divider"></div>
+
+    <p class="pull-quote">
+      Like having a brilliant friend who actually listens - the kind who remembers what you said three weeks ago, never brings it up unless it's useful, and is there at midnight when everyone else is asleep.
+    </p>
+    <div class="pull-source">What people say it feels like</div>
+
+    <div class="feel-divider"></div>
+
+    <p class="pull-quote">
+      Most AI tools are built to keep you on the platform, subtly steer what you think, and sell the pattern of your questions to someone else. Fae is the opposite. She has one interest: yours.
+    </p>
+    <div class="pull-source">The difference that matters</div>
+
+    <div class="feel-divider"></div>
+
+    <p class="feel-resolution">
+      The days are long and there's a lot going on. Fae doesn't fix that. But she's the part of your day that costs nothing, asks nothing back, and makes the rest of it a little more manageable.
+    </p>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="download">
+  <div class="cta-inner">
+    <h2 class="cta-h">Quiet when you don't need her.<br><em>There when you do.</em></h2>
+    <p class="cta-body">
+      One download. No account. No subscription. Fae is on your Mac and iPhone - quiet when you don't need her, there when you do.
+    </p>
+    <div class="cta-btn-wrap">
+      <a href="#" class="cta-btn">
+        Meet Fae - it's free
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+      </a>
+      <span class="cta-sub">macOS 13+ · iPhone · Apple Watch · No Wi-Fi needed</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">Fae</div>
+  <div class="footer-links">
+    <a href="#">Privacy</a>
+    <a href="#">About</a>
+    <a href="#">Autonomi</a>
+  </div>
+  <div class="footer-r">Created by Saorsa Labs | For Autonomi</div>
+</footer>
+
+<script>
+window.addEventListener('DOMContentLoaded', function() {
+
+  // ── ORB (terracotta palette for page 2) ─────────────────────
+  const orbCanvas = document.getElementById('orbCanvas2');
+  const pulseCanvas = document.getElementById('pulseCanvas2');
+  if (!orbCanvas || !pulseCanvas) return;
+
+  const oc = orbCanvas.getContext('2d');
+  const pc = pulseCanvas.getContext('2d');
+
+  const OW = orbCanvas.width, OH = orbCanvas.height;
+  const ocx = OW/2, ocy = OH/2, R = OW/2 - 1;
+  const PW = pulseCanvas.width, PH = pulseCanvas.height;
+  const pcx = PW/2, pcy = PH/2;
+
+  // Warm terracotta + amber palette
+  const PALETTE = [
+    [217,123,90],  // terracotta
+    [196,100,62],  // deeper terra
+    [235,160,120], // blush
+    [180,90,60],   // rust
+    [240,190,150], // pale warm
+  ];
+
+  const blobs = Array.from({length:5}, (_,i) => ({
+    x: ocx + (Math.random()-0.5)*R*0.5,
+    y: ocy + (Math.random()-0.5)*R*0.5,
+    vx: (Math.random()-0.5)*0.3,
+    vy: (Math.random()-0.5)*0.3,
+    r: R*0.38 + Math.random()*R*0.18,
+    ci: i % PALETTE.length,
+    ph: Math.random()*Math.PI*2
+  }));
+
+  let rings = [];
+  let nextPulse = 0;
+  const rhythm = [0.6,0.4,0.35,0.9,0.5,0.4,0.7,1.2,0.35,0.5];
+  let ri = 0;
+
+  function spawnRing(t) {
+    rings.push({
+      born: t, speed: 28+Math.random()*16,
+      thick: 6+Math.random()*7, ci: Math.floor(Math.random()*4),
+      str: 0.07+Math.random()*0.06, maxR: 78
+    });
+  }
+
+  let start = null;
+  function frame(ts) {
+    if (!start) start = ts;
+    const t = (ts-start)/1000;
+    if (t >= nextPulse) { spawnRing(t); nextPulse = t+rhythm[ri++%rhythm.length]; }
+
+    // ── draw orb (new: large zoomed blob, no focal point) ──
+    oc.clearRect(0,0,OW,OH);
+
+    const _isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+      || document.body.classList.contains('dark-mode');
+
+    if (!frame._cr) {
+      const _p0 = PALETTE[0];
+      frame._cr = _p0[0]; frame._cg = _p0[1]; frame._cb = _p0[2];
+      frame._tr = _p0[0]; frame._tg = _p0[1]; frame._tb = _p0[2];
+      frame._mt = 0;
+    }
+    frame._mt++;
+    if (frame._mt > 160) {
+      const _np = PALETTE[Math.floor(Math.random() * PALETTE.length)];
+      frame._tr = _np[0]; frame._tg = _np[1]; frame._tb = _np[2];
+      frame._mt = 0;
+    }
+    frame._cr += (frame._tr - frame._cr) * 0.007;
+    frame._cg += (frame._tg - frame._cg) * 0.007;
+    frame._cb += (frame._tb - frame._cb) * 0.007;
+    const _cr = frame._cr, _cg = frame._cg, _cb = frame._cb;
+
+    const clip = new Path2D();
+    clip.arc(ocx, ocy, R, 0, Math.PI*2);
+    oc.save();
+    oc.clip(clip);
+
+    if (_isDark) {
+      oc.fillStyle = `rgba(${(_cr*0.18)|0},${(_cg*0.10)|0},${(_cb*0.06)|0},1)`;
+    } else {
+      oc.fillStyle = `rgba(253,247,238,1)`;
+    }
+    oc.fillRect(0, 0, OW, OH);
+
+    const _bx = ocx + Math.cos(t * 0.13) * R * 0.35;
+    const _by = ocy + Math.sin(t * 0.17) * R * 0.30;
+    const _g1 = oc.createRadialGradient(_bx, _by, 0, _bx, _by, R * 1.4);
+    _g1.addColorStop(0,    `rgba(${_cr|0},${_cg|0},${_cb|0},0.72)`);
+    _g1.addColorStop(0.4,  `rgba(${_cr|0},${_cg|0},${_cb|0},0.45)`);
+    _g1.addColorStop(0.75, `rgba(${_cr|0},${_cg|0},${_cb|0},0.12)`);
+    _g1.addColorStop(1,    'rgba(0,0,0,0)');
+    oc.fillStyle = _g1;
+    oc.beginPath(); oc.arc(ocx, ocy, R, 0, Math.PI*2); oc.fill();
+
+    const _ar = Math.min(255, (_cr + 32)|0);
+    const _ag = Math.min(255, (_cg + 62)|0);
+    const _ab = Math.min(255, (_cb + 18)|0);
+    const _bx2 = ocx + Math.cos(t * 0.11 + 3.14) * R * 0.38;
+    const _by2 = ocy + Math.sin(t * 0.15 + 2.0)  * R * 0.32;
+    const _g2 = oc.createRadialGradient(_bx2, _by2, 0, _bx2, _by2, R * 1.1);
+    _g2.addColorStop(0,   `rgba(${_ar},${_ag},${_ab},0.38)`);
+    _g2.addColorStop(0.6, `rgba(${_ar},${_ag},${_ab},0.10)`);
+    _g2.addColorStop(1,   'rgba(0,0,0,0)');
+    oc.fillStyle = _g2;
+    oc.beginPath(); oc.arc(ocx, ocy, R, 0, Math.PI*2); oc.fill();
+
+    const _vig = oc.createRadialGradient(ocx, ocy, R * 0.6, ocx, ocy, R);
+    _vig.addColorStop(0, 'rgba(0,0,0,0)');
+    _vig.addColorStop(1, _isDark ? 'rgba(0,0,0,0.28)' : 'rgba(160,80,20,0.07)');
+    oc.fillStyle = _vig;
+    oc.beginPath(); oc.arc(ocx, ocy, R, 0, Math.PI*2); oc.fill();
+
+    oc.restore();
+
+    pc.clearRect(0,0,PW,PH);
+    rings = rings.filter(ring => {
+      const age=t-ring.born; if(age<0) return true;
+      const rad=age*ring.speed; if(rad>ring.maxR) return false;
+      const life=rad/ring.maxR;
+      const fade=life<0.1?life/0.1:1-((life-0.1)/0.9);
+      const alpha=Math.max(0,fade*ring.str);
+      if(alpha<0.002) return true;
+      const [cr,cg,cb]=PALETTE[ring.ci];
+      const inner=Math.max(0,rad-ring.thick/2), outer=rad+ring.thick/2;
+      const g=pc.createRadialGradient(pcx,pcy,inner,pcx,pcy,outer);
+      g.addColorStop(0,`rgba(${cr},${cg},${cb},0)`);
+      g.addColorStop(0.45,`rgba(${cr},${cg},${cb},${alpha})`);
+      g.addColorStop(1,`rgba(${cr},${cg},${cb},0)`);
+      pc.fillStyle=g; pc.beginPath(); pc.arc(pcx,pcy,outer,0,Math.PI*2); pc.fill();
+      return true;
+    });
+
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  // ── CONVERSATION ENGINE ───────────────────────────────────────
+  const SCENES = [
+    {
+      id: 'sc2-1',
+      inputs: ['I\'ve done nothing all weekend and I feel terrible about it', 'I wanted to start the side project but I just couldn\'t'],
+      seq: ['s1u1','s1d1','s1f1','s1u2','s1d2','s1f2']
+    },
+    {
+      id: 'sc2-2',
+      inputs: ['I need to email my manager about the raise. I\'ve been putting it off for three weeks', 'yes please, no grovelling'],
+      seq: ['s2u1','s2d1','s2f1','s2u2','s2d2','s2f2']
+    },
+    {
+      id: 'sc2-3',
+      inputs: ['what was that restaurant I said I wanted to try?', 'yes and remind me what the birthday plan was'],
+      seq: ['s3u1','s3d1','s3f1','s3u2','s3d2','s3f2']
+    }
+  ];
+
+  let sceneIdx = 0;
+  const stateEl       = document.getElementById('faeState2');
+  const placeholderEl = document.getElementById('faePlaceholder2');
+  const typedEl       = document.getElementById('faeTyped2');
+  const caretEl       = document.getElementById('faeCaret2');
+
+  const wait   = ms => new Promise(r => setTimeout(r, ms));
+  const setState = s => { if(stateEl) stateEl.textContent = s; };
+  const showEl = id => { const e=document.getElementById(id); if(e) e.classList.add('show'); };
+  const hideEl = id => { const e=document.getElementById(id); if(e) e.classList.remove('show'); };
+
+  async function typeInto(text) {
+    if(!placeholderEl||!typedEl||!caretEl) return;
+    placeholderEl.style.opacity='0';
+    caretEl.style.opacity='1';
+    Array.from(typedEl.childNodes).forEach(n=>{ if(n!==caretEl) n.remove(); });
+    const node = document.createTextNode('');
+    typedEl.insertBefore(node, caretEl);
+    for(let i=1; i<=text.length; i++) {
+      node.nodeValue = text.slice(0,i);
+      await wait(48+Math.random()*30);
+    }
+    await wait(520);
+  }
+
+  function clearInput() {
+    if(!typedEl||!caretEl||!placeholderEl) return;
+    Array.from(typedEl.childNodes).forEach(n=>{ if(n!==caretEl) n.remove(); });
+    caretEl.style.opacity='0';
+    placeholderEl.style.opacity='1';
+  }
+
+  function resetScene(sc) {
+    const scEl = document.getElementById(sc.id);
+    if(scEl) { scEl.classList.remove('active'); scEl.style.opacity='1'; }
+    sc.seq.forEach(id => hideEl(id));
+  }
+
+  async function runScene(sc) {
+    const scEl = document.getElementById(sc.id);
+    if(scEl) scEl.classList.add('active');
+    setState('');
+    clearInput();
+    await wait(800);
+
+    setState('Listening...');
+    await typeInto(sc.inputs[0]);
+    showEl(sc.seq[0]);
+    clearInput();
+    await wait(300);
+
+    showEl(sc.seq[1]);
+    setState('Thinking...');
+    await wait(1600);
+    hideEl(sc.seq[1]);
+    showEl(sc.seq[2]);
+    setState('Listening...');
+    await wait(2000);
+
+    await typeInto(sc.inputs[1]);
+    showEl(sc.seq[3]);
+    clearInput();
+    await wait(300);
+
+    showEl(sc.seq[4]);
+    setState('Thinking...');
+    await wait(1400);
+    hideEl(sc.seq[4]);
+    showEl(sc.seq[5]);
+    setState('Listening...');
+    // scroll final message into view
+    await wait(100);
+    const finalMsg = document.getElementById(sc.seq[5]);
+    if (finalMsg) finalMsg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    await wait(4500);
+
+    if(scEl) scEl.style.opacity='0';
+    await wait(600);
+    resetScene(sc);
+    clearInput();
+    setState('');
+    await wait(400);
+  }
+
+  async function loop() {
+    while(true) {
+      await runScene(SCENES[sceneIdx%SCENES.length]);
+      sceneIdx++;
+    }
+  }
+
+  setTimeout(loop, 900);
+
+  // ── THEME TOGGLE ─────────────────────────────────────────────
+  const toggleBtn = document.getElementById('themeToggle');
+  const html = document.documentElement;
+
+  // respect system preference on first load
+  if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    html.setAttribute('data-theme', 'dark');
+  }
+
+  toggleBtn.addEventListener('click', () => {
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  });
+});
+
+  function injectPrompt2(btn) {
+    const typed = document.getElementById('winTyped2');
+    const ph = document.getElementById('winPh2');
+    if (!typed || !ph) return;
+    typed.textContent = btn.textContent;
+    if (ph) ph.style.opacity = '0';
+  }
+</script>
+</body>
+</html>
