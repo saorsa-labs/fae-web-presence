@@ -1,0 +1,1713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fae - Think for yourself.</title>
+<meta name="description" content="No algorithm. No agenda. No one watching. Fae is your private AI - lives on your device, costs nothing, answers to nobody but you.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #080810;
+    --white: #F0F0FF;
+    --acid: #00C8FF;
+    --acid-dim: rgba(0,200,255,0.12);
+    --acid-mid: rgba(0,200,255,0.25);
+    --pink: #FF2080;
+    --pink-dim: rgba(255,32,128,0.12);
+    --grey: #111118;
+    --grey2: #1A1A28;
+    --muted: #6868A0;
+    --rule: rgba(200,200,255,0.07);
+    --red: #FF2080;
+  }
+
+  body.light-mode {
+    --black: #F0EDF8;
+    --white: #0A0818;
+    --acid: #0050CC;
+    --acid-dim: rgba(0,80,204,0.1);
+    --acid-mid: rgba(0,80,204,0.2);
+    --pink: #CC1060;
+    --pink-dim: rgba(204,16,96,0.1);
+    --grey: #E4E0F0;
+    --grey2: #D8D4EC;
+    --muted: #3A3860;
+    --rule: rgba(10,8,24,0.1);
+    --red: #CC1060;
+  }
+
+  body.light-mode .hero-body { color: rgba(15,15,15,0.65); }
+  body.light-mode .truth-body { color: rgba(15,15,15,0.6); }
+  body.light-mode .truth-body strong { color: #0F0F0F; }
+  body.light-mode .vs-col--them .vs-item { color: rgba(15,15,15,0.55); }
+  body.light-mode .vs-col--fae .vs-item { color: rgba(15,15,15,0.85); }
+  body.light-mode .statement-body { color: rgba(15,15,15,0.6); }
+  body.light-mode .statement-body strong { color: #0F0F0F; }
+  body.light-mode .cta-body { color: rgba(15,15,15,0.55); }
+  body.light-mode .hero-sub { color: rgba(15,15,15,0.45); }
+  body.light-mode .fae-msg-user { background: rgba(0,87,255,0.08); border-color: rgba(0,87,255,0.25); color: #0F0F0F; }
+  body.light-mode .fae-msg-fae { background: rgba(15,15,15,0.06); border-color: rgba(15,15,15,0.1); color: rgba(15,15,15,0.7); }
+  body.light-mode .fae-input-bar { background: rgba(15,15,15,0.04); border-color: rgba(0,87,255,0.2); }
+  body.light-mode .fae-state { color: rgba(0,87,255,0.7); }
+  body.light-mode .fae-aura-1 { border-color: rgba(0,87,255,0.18); }
+  body.light-mode .fae-aura-2 { border-color: rgba(0,87,255,0.07); }
+  body.light-mode .fae-dots span { background: rgba(0,87,255,0.5); }
+  body.light-mode .fae-input-bar { border-color: rgba(0,87,255,0.2); }
+  body.light-mode .fae-ui-wrap { filter: drop-shadow(0 32px 64px rgba(0,87,255,0.06)) drop-shadow(0 0 1px rgba(0,87,255,0.15)); }
+  body.light-mode .statement-num { color: rgba(0,87,255,0.08); }
+  body.light-mode .fae-typed { color: rgba(15,15,15,0.85); }
+  body.light-mode .fae-placeholder { color: rgba(15,15,15,0.25); }
+
+  body, body * {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    overflow-x: hidden;
+    cursor: crosshair;
+  }
+
+  /* ── GRAIN ── */
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 9999; opacity: 0.5;
+  }
+
+  /* ── MARQUEE ── */
+  .marquee-wrap {
+    background: var(--acid);
+    padding: 10px 0;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .marquee-track {
+    display: inline-flex;
+    animation: marqueeScroll 18s linear infinite;
+  }
+
+  .marquee-track span {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    color: #0A0A0A;
+    padding: 0 28px;
+  }
+
+  .marquee-track span.sep {
+    opacity: 0.4;
+    padding: 0;
+  }
+
+  @keyframes marqueeScroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,10,10,0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--rule);
+    padding: 0 40px;
+    height: 56px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 0.08em;
+    color: var(--white);
+    line-height: 1;
+  }
+
+  .nav-logo span { color: var(--acid); }
+
+  .nav-right {
+    display: flex; align-items: center; gap: 24px;
+  }
+
+  .nav-link {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.15s;
+  }
+  .nav-link:hover { color: var(--white); }
+
+  .nav-cta {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: linear-gradient(90deg, var(--acid), var(--pink));
+    color: var(--black);
+    border: none;
+    padding: 9px 20px;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: 700;
+    transition: opacity 0.15s, transform 0.1s;
+  }
+  .nav-cta:hover { opacity: 0.85; transform: translateY(-1px); }
+
+  .mode-toggle {
+    background: none;
+    border: 1px solid var(--rule);
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    padding: 7px 12px;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .mode-toggle:hover {
+    color: var(--acid);
+    border-color: var(--acid);
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    padding: 80px 40px 60px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  /* cyberpunk grid + spray texture */
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      repeating-linear-gradient(0deg, transparent, transparent 38px, rgba(0,200,255,0.03) 38px, rgba(0,200,255,0.03) 39px),
+      repeating-linear-gradient(90deg, transparent, transparent 38px, rgba(0,200,255,0.02) 38px, rgba(0,200,255,0.02) 39px);
+    pointer-events: none;
+  }
+
+  /* dual glow - blue left, pink right */
+  .hero::after {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse at -5% 60%, rgba(0,200,255,0.14) 0%, transparent 45%),
+      radial-gradient(ellipse at 105% 30%, rgba(255,32,128,0.12) 0%, transparent 45%),
+      radial-gradient(ellipse at 50% 110%, rgba(255,32,128,0.06) 0%, transparent 40%);
+    pointer-events: none;
+  }
+
+  .hero-left {
+    position: relative; z-index: 1;
+    opacity: 0;
+    animation: fadeIn 0.5s 0.1s ease forwards;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--acid); margin-bottom: 24px; font-weight: 700;
+  }
+  .hero-tag::before {
+    content: '';
+    width: 18px; height: 1px; background: var(--acid);
+  }
+
+  .hero-h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 9vw, 130px);
+    line-height: 0.92;
+    letter-spacing: 0.01em;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+
+  .hero-h1 .acid { color: var(--acid); }
+  .hero-h1 .pink { color: var(--pink); text-shadow: 0 0 24px rgba(255,32,128,0.4); }
+  .hero-h1 .muted-word { color: var(--muted); }
+  .hero-h1 .strike {
+    position: relative;
+  }
+  .hero-h1 .strike::after {
+    content: '';
+    position: absolute;
+    left: -2px; right: -2px;
+    top: 50%; height: 5px;
+    background: var(--red);
+    transform: rotate(-6deg);
+  }
+
+  .hero-sub {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(28px, 3.5vw, 46px);
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    line-height: 1.1;
+    margin-bottom: 36px;
+  }
+
+  .hero-sub em {
+    color: var(--white);
+    font-style: normal;
+  }
+
+  .hero-sub .muted-em {
+    color: var(--muted);
+    font-style: normal;
+  }
+
+  .hero-body {
+    font-size: 13px;
+    color: rgba(245,245,240,0.55);
+    line-height: 1.85;
+    max-width: 420px;
+    margin-bottom: 36px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+  }
+
+  .hero-body strong { color: var(--white); font-weight: 500; }
+
+  .stat-row {
+    display: flex; gap: 32px; margin-bottom: 40px; flex-wrap: wrap;
+  }
+
+  .stat-item {}
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    color: var(--acid);
+    line-height: 1;
+    letter-spacing: 0.04em;
+  }
+  .stat-label {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  .cta-group {
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  }
+
+  .cta-primary {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--acid);
+    color: var(--black);
+    font-family: 'Space Mono', monospace;
+    font-size: 12px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 16px 32px;
+    text-decoration: none;
+    transition: all 0.15s;
+  }
+  .cta-primary:hover { background: white; transform: translateY(-2px); }
+
+  .cta-secondary {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* ── FLOATING ORB + BUBBLES ── */
+  .hero-right {
+    position: relative; z-index: 1;
+    opacity: 0;
+    animation: fadeIn 0.5s 0.25s ease forwards;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    min-height: 540px;
+    justify-content: center;
+  }
+
+  .orb-float4 {
+    position: relative;
+    width: 160px; height: 160px;
+    margin: 0 auto;
+    flex-shrink: 0;
+    z-index: 2;
+  }
+
+  #orbCanvas4 {
+    position: absolute;
+    width: 110px; height: 110px;
+    border-radius: 50%;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 2;
+  }
+  #pulseCanvas4 {
+    position: absolute;
+    width: 220px; height: 220px;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    pointer-events: none; z-index: 1;
+  }
+
+  .fae-aura {
+    position: absolute; border-radius: 50%; pointer-events: none;
+    top: 50%; left: 50%; transform: translate(-50%,-50%);
+  }
+  .fae-aura-1 {
+    width: 122px; height: 122px;
+    border: 1px solid rgba(0,200,255,0.25);
+    box-shadow: 0 0 18px rgba(0,200,255,0.08);
+    animation: auraP4 6s ease-in-out infinite;
+  }
+  .fae-aura-2 {
+    width: 142px; height: 142px;
+    border: 1px solid rgba(255,32,128,0.12);
+    box-shadow: 0 0 28px rgba(255,32,128,0.06);
+    animation: auraP4 6s ease-in-out infinite 2s;
+  }
+  @keyframes auraP4 {
+    0%,100% { transform: translate(-50%,-50%) scale(1); opacity: 1; }
+    50%      { transform: translate(-50%,-50%) scale(1.07); opacity: 0.25; }
+  }
+
+  .orb-name4 {
+    text-align: center; margin-top: 14px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px; letter-spacing: 0.12em;
+    color: var(--white);
+  }
+  .orb-name4 span { color: var(--acid); }
+
+  .fae-state {
+    text-align: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px; letter-spacing: 0.1em;
+    color: var(--acid); text-transform: uppercase;
+    min-height: 14px; margin-top: 4px;
+    opacity: 0.6;
+  }
+
+  /* floating chat bubbles */
+  .chat-float4 {
+    width: 100%;
+    display: flex; flex-direction: column;
+    gap: 10px;
+    padding: 0 4px;
+    margin-top: 24px;
+    position: relative;
+  }
+
+  .fae-scene { display: none; flex-direction: column; gap: 10px; }
+  .fae-scene.active { display: flex; }
+
+  .fae-msg {
+    padding: 11px 15px;
+    font-size: 11px; line-height: 1.7;
+    max-width: 90%;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.35s ease, transform 0.3s ease;
+    font-family: 'Space Mono', monospace;
+    text-align: left;
+  }
+  .fae-msg.show { opacity: 1; transform: translateY(0); }
+
+  .fae-msg-user {
+    align-self: flex-end;
+    background: rgba(0,200,255,0.07);
+    border: 1px solid rgba(0,200,255,0.22);
+    color: rgba(245,245,240,0.9);
+    border-radius: 12px 12px 3px 12px;
+  }
+
+  .fae-msg-fae {
+    align-self: flex-start;
+    background: rgba(245,245,240,0.04);
+    border: 1px solid rgba(245,245,240,0.08);
+    color: rgba(245,245,240,0.6);
+    font-style: italic;
+    border-radius: 3px 12px 12px 12px;
+  }
+
+  .fae-dots {
+    align-self: flex-start;
+    display: flex; gap: 4px; align-items: center;
+    padding: 10px 14px;
+    background: rgba(245,245,240,0.03);
+    border: 1px solid rgba(245,245,240,0.06);
+    border-radius: 3px 12px 12px 12px;
+    opacity: 0; transition: opacity 0.2s;
+  }
+  .fae-dots.show { opacity: 1; }
+  .fae-dots span {
+    width: 4px; height: 4px; border-radius: 50%;
+    background: rgba(0,200,255,0.5);
+    animation: dot4 1s ease-in-out infinite;
+  }
+  .fae-dots span:nth-child(2) { animation-delay: 0.16s; }
+  .fae-dots span:nth-child(3) { animation-delay: 0.32s; }
+  @keyframes dot4 {
+    0%,60%,100% { transform: translateY(0); opacity: 0.4; }
+    30%          { transform: translateY(-4px); opacity: 1; }
+  }
+
+  /* floating input bar */
+  .fae-input-bar {
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(245,245,240,0.03);
+    border: 1px solid rgba(0,200,255,0.14);
+    border-radius: 8px;
+    padding: 10px 16px;
+    margin: 14px 4px 0;
+    box-shadow: 0 0 24px rgba(0,200,255,0.04);
+  }
+
+  .fae-prompt-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px; color: var(--acid);
+    opacity: 0.6; flex-shrink: 0;
+  }
+
+  .fae-input-field { flex: 1; position: relative; min-height: 16px; text-align: left; }
+
+  .fae-placeholder {
+    position: absolute; top: 0; left: 0;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px; color: rgba(245,245,240,0.15);
+    pointer-events: none; transition: opacity 0.15s;
+    font-style: italic; white-space: nowrap;
+  }
+
+  .fae-typed {
+    display: block;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px; color: rgba(245,245,240,0.85);
+    white-space: normal; word-break: break-word;
+    text-align: left;
+  }
+
+  .fae-caret {
+    display: inline-block;
+    width: 7px; height: 13px;
+    background: var(--acid);
+    margin-left: 1px; vertical-align: middle;
+    opacity: 0;
+    animation: caretBlink4 0.8s step-end infinite;
+  }
+  @keyframes caretBlink4 { 0%,100%{opacity:0.9} 50%{opacity:0} }
+
+  /* ── TRUTH SECTION ── */
+  .truth-section {
+    padding: 80px 40px;
+    border-bottom: 1px solid var(--rule);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .truth-inner {
+    max-width: 1100px; margin: 0 auto;
+  }
+
+  .truth-header {
+    display: flex; align-items: flex-start;
+    justify-content: space-between; gap: 60px;
+    margin-bottom: 60px;
+  }
+
+  .truth-h {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 6vw, 88px);
+    line-height: 0.95;
+    letter-spacing: 0.02em;
+    color: var(--white);
+    flex: 1;
+  }
+
+  .truth-h .acid { color: var(--acid); }
+  .truth-h .pink { color: var(--pink); }
+  .truth-h .line2 { color: var(--muted); }
+
+  .truth-right {
+    flex: 0 0 360px;
+    padding-top: 8px;
+  }
+
+  .truth-body {
+    font-size: 14px;
+    color: rgba(245,245,240,0.5);
+    line-height: 1.85;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    margin-bottom: 24px;
+  }
+  .truth-body strong { color: var(--white); font-weight: 500; }
+
+  /* the vs grid */
+  .vs-grid {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 0;
+    border: 1px solid var(--rule);
+  }
+
+  .vs-col {
+    padding: 0;
+  }
+
+  .vs-col-header {
+    padding: 14px 20px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px; letter-spacing: 0.12em;
+    border-bottom: 1px solid var(--rule);
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .vs-col--them .vs-col-header { color: var(--muted); }
+  .vs-col--fae  .vs-col-header { color: var(--pink); }
+
+  .vs-divider {
+    display: flex; align-items: center; justify-content: center;
+    border-left: 1px solid var(--rule);
+    border-right: 1px solid var(--rule);
+  }
+
+  .vs-vs {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px; letter-spacing: 0.1em;
+    color: var(--muted);
+    writing-mode: vertical-rl;
+    letter-spacing: 0.3em;
+  }
+
+  .vs-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 13px 20px;
+    border-bottom: 1px solid var(--rule);
+    font-size: 12px; line-height: 1.5;
+  }
+  .vs-item:last-child { border-bottom: none; }
+
+  .vs-col--them .vs-item { color: var(--muted); }
+  .vs-col--fae  .vs-item { color: rgba(245,245,240,0.8); }
+
+  .vs-icon {
+    width: 16px; height: 16px;
+    flex-shrink: 0; margin-top: 1px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* ── STATEMENTS SECTION ── */
+  .statements {
+    padding: 80px 40px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .statements-inner {
+    max-width: 1100px; margin: 0 auto;
+  }
+
+  .statement-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1px;
+    background: var(--rule);
+  }
+
+  .statement-card {
+    background: var(--black);
+    padding: 40px 32px;
+    position: relative;
+    transition: background 0.2s;
+  }
+  .statement-card:hover { background: var(--grey); }
+
+  .statement-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 80px;
+    color: rgba(255,32,128,0.06);
+    line-height: 1;
+    position: absolute; top: 16px; right: 20px;
+    letter-spacing: -0.02em;
+  }
+
+  .statement-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--acid); opacity: 0.6;
+    margin-bottom: 16px;
+  }
+
+  .statement-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px; letter-spacing: 0.04em;
+    color: var(--white); margin-bottom: 14px;
+    line-height: 1.1;
+  }
+
+  .statement-title .acid { color: var(--acid); }
+  .statement-title .pink { color: var(--pink); }
+
+  .statement-body {
+    font-size: 12px;
+    color: rgba(245,245,240,0.45);
+    line-height: 1.85;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+  }
+
+  .statement-body strong { color: rgba(245,245,240,0.75); font-weight: 500; }
+
+  .statement-tag {
+    display: inline-block;
+    margin-top: 20px;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--acid);
+    border: 1px solid rgba(0,200,255,0.25);
+    padding: 5px 10px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* ── PROOF STRIP ── */
+  .proof-strip {
+    padding: 28px 40px;
+    background: var(--grey);
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    display: flex; align-items: center;
+    justify-content: center; gap: 40px; flex-wrap: wrap;
+  }
+
+  .proof-item {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px; letter-spacing: 0.08em;
+    color: var(--muted); text-transform: uppercase;
+  }
+
+  .proof-item svg { color: var(--acid); opacity: 0.7; }
+  .proof-sep { color: var(--rule); font-size: 20px; }
+
+  /* ── MANIFESTO ── */
+  .manifesto {
+    padding: 100px 40px;
+    border-bottom: 1px solid var(--rule);
+    position: relative; overflow: hidden;
+  }
+
+  .manifesto::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 100%, rgba(0,200,255,0.03) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .manifesto-inner {
+    max-width: 800px; margin: 0 auto;
+    text-align: center; position: relative; z-index: 1;
+  }
+
+  .manifesto-tag {
+    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--acid); margin-bottom: 32px;
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+    font-family: 'Space Mono', monospace;
+  }
+  .manifesto-tag::before, .manifesto-tag::after {
+    content: ''; flex: 0 0 40px; height: 1px; background: var(--acid); opacity: 0.3;
+  }
+
+  .manifesto-lines {
+    display: flex; flex-direction: column; gap: 4px;
+  }
+
+  .manifesto-line {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(32px, 5vw, 64px);
+    line-height: 1.05;
+    letter-spacing: 0.03em;
+    color: var(--white);
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  .manifesto-line.visible { opacity: 1; transform: translateY(0); }
+  .manifesto-line .acid { color: var(--acid); }
+  .manifesto-line .pink { color: var(--pink); }
+  .manifesto-line .muted { color: var(--muted); }
+  .manifesto-line .strike-through {
+    position: relative; color: var(--muted);
+  }
+  .manifesto-line .strike-through::after {
+    content: ''; position: absolute;
+    left: 0; right: 0; top: 50%; height: 2px;
+    background: var(--red);
+  }
+
+  /* ── CTA ── */
+  .cta-section {
+    padding: 100px 40px;
+    text-align: center; position: relative; overflow: hidden;
+  }
+
+  .cta-section::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(255,32,128,0.05) 0%, transparent 55%);
+    pointer-events: none;
+  }
+
+  /* acid border top */
+  .cta-section::after {
+    content: '';
+    position: absolute; top: 0; left: 10%; right: 10%; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--acid), transparent);
+    opacity: 0.3;
+  }
+
+  .cta-inner {
+    position: relative; z-index: 1;
+    max-width: 700px; margin: 0 auto;
+  }
+
+  .cta-pre {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--acid); margin-bottom: 20px;
+  }
+
+  .cta-h {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 7vw, 96px);
+    line-height: 0.95; letter-spacing: 0.02em;
+    color: var(--white); margin-bottom: 20px;
+  }
+
+  .cta-h .acid { color: var(--acid); }
+  .cta-h .pink { color: var(--pink); }
+
+  .cta-body {
+    font-size: 13px;
+    color: rgba(245,245,240,0.4);
+    line-height: 1.8; margin-bottom: 48px;
+    font-family: 'DM Sans', sans-serif; font-weight: 300;
+  }
+
+  .cta-btn {
+    display: inline-flex; align-items: center; gap: 14px;
+    background: var(--acid);
+    color: var(--black);
+    font-family: 'Space Mono', monospace;
+    font-size: 13px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 20px 48px;
+    text-decoration: none;
+    transition: all 0.15s;
+  }
+  .cta-btn:hover { background: white; transform: translateY(-3px); box-shadow: 0 16px 40px rgba(0,200,255,0.15); }
+
+  .cta-small {
+    margin-top: 16px;
+    font-size: 10px; letter-spacing: 0.1em;
+    color: var(--muted); font-family: 'Space Mono', monospace;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--grey);
+    border-top: 1px solid var(--rule);
+    padding: 24px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: 0.08em;
+    color: var(--muted); text-transform: uppercase;
+  }
+
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px; letter-spacing: 0.1em;
+    color: var(--white);
+  }
+  .footer-logo span { color: var(--acid); }
+
+  .footer-links { display: flex; gap: 24px; }
+  .footer-links a { color: var(--muted); text-decoration: none; transition: color 0.15s; }
+  .footer-links a:hover { color: var(--acid); }
+
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; }
+    .truth-header { flex-direction: column; gap: 32px; }
+    .truth-right { flex: unset; }
+    .statement-row { grid-template-columns: 1fr; }
+    .vs-grid { grid-template-columns: 1fr; }
+    .vs-divider { display: none; }
+    nav { display: none; }
+    nav, .hero, .truth-section, .statements, .proof-strip, .manifesto, .cta-section { padding-left: 20px; padding-right: 20px; }
+    footer { flex-direction: column; gap: 16px; text-align: center; }
+  }
+
+  /* ── DATA COMPARISON ── */
+  .data-compare {
+    background: var(--black);
+    padding: 80px 48px;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .data-compare-inner {
+    max-width: 900px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1px 1fr;
+    gap: 48px; align-items: start;
+  }
+  .compare-head {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted); margin-bottom: 20px;
+  }
+  .compare-badge {
+    padding: 2px 8px; border-radius: 2px;
+    font-size: 8px; font-weight: 700;
+    letter-spacing: 0.12em;
+  }
+  .compare-badge.them { background: rgba(255,60,60,0.15); color: rgba(255,100,100,0.8); border: 1px solid rgba(255,60,60,0.2); }
+  .compare-badge.fae { background: rgba(190,255,0,0.1); color: var(--acid); border: 1px solid rgba(190,255,0,0.2); }
+  .compare-list {
+    list-style: none; padding: 0; margin: 0;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .compare-list li {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 13px; color: rgba(255,255,255,0.55);
+    font-family: 'Space Mono', monospace;
+  }
+  .x-mark { color: rgba(255,80,80,0.7); font-size: 12px; flex-shrink: 0; }
+  .compare-divider { background: var(--rule); width: 1px; }
+  .compare-nothing {
+    display: flex; flex-direction: column; gap: 10px;
+    padding-top: 8px;
+  }
+  .nothing-word {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 80px; line-height: 1;
+    color: var(--acid); letter-spacing: -0.02em;
+  }
+  .nothing-sub {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; color: rgba(190,255,0,0.5);
+    letter-spacing: 0.1em;
+  }
+
+  /* ── MANIFESTO PULL QUOTES ── */
+  .manifesto-pull-quotes {
+    margin-bottom: 48px;
+    display: flex; flex-direction: column; gap: 0;
+    border-left: 3px solid var(--acid);
+    padding-left: 28px;
+  }
+  .manifesto-pull {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(40px, 5.5vw, 72px);
+    line-height: 1.0; color: var(--white);
+    letter-spacing: 0.01em;
+    margin-bottom: 12px;
+  }
+  .manifesto-pull.secondary {
+    font-size: clamp(28px, 3.5vw, 46px);
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 32px;
+  }
+
+  @media (max-width: 900px) {
+    .data-compare-inner { grid-template-columns: 1fr; gap: 32px; }
+    .compare-divider { display: none; }
+    .data-compare { padding: 60px 20px; }
+    .manifesto-pull { font-size: clamp(36px, 8vw, 56px); }
+  }
+
+  /* ── NAMED BADGES ── */
+  .compare-named-row {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin-bottom: 14px;
+  }
+  .named-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 8px; letter-spacing: 0.1em;
+    padding: 2px 7px; border-radius: 2px;
+    font-weight: 700;
+  }
+  .named-badge.chatgpt  { background: rgba(16,163,127,0.12); color: rgba(16,163,127,0.8); border: 1px solid rgba(16,163,127,0.2); }
+  .named-badge.gemini   { background: rgba(66,133,244,0.12); color: rgba(66,133,244,0.8); border: 1px solid rgba(66,133,244,0.2); }
+  .named-badge.perplexity { background: rgba(32,178,170,0.12); color: rgba(32,178,170,0.8); border: 1px solid rgba(32,178,170,0.2); }
+  .named-badge.copilot  { background: rgba(124,106,247,0.12); color: rgba(124,106,247,0.8); border: 1px solid rgba(124,106,247,0.2); }
+
+  /* ── DOWNLOAD TRUST ── */
+  .dl-trust-section {
+    padding: 80px 48px;
+    background: var(--grey);
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .dl-trust-inner { max-width: 900px; margin: 0 auto; }
+  .dl-trust-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--muted);
+    margin-bottom: 16px;
+  }
+  .dl-trust-h {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 5vw, 60px); line-height: 1;
+    color: var(--white); letter-spacing: 0.02em;
+    margin-bottom: 36px;
+  }
+  .dl-trust-steps {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 20px; margin-bottom: 28px;
+  }
+  .dl-trust-step {
+    background: var(--black);
+    border: 1px solid var(--rule);
+    border-radius: 8px; padding: 20px;
+  }
+  .dl-step-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: 0.12em;
+    color: var(--acid); margin-bottom: 8px;
+  }
+  .dl-step-title {
+    font-size: 13px; font-weight: 600;
+    color: var(--white); margin-bottom: 8px;
+  }
+  .dl-step-body {
+    font-size: 12px; color: var(--muted);
+    line-height: 1.65;
+  }
+  .dl-trust-delete {
+    background: rgba(190,255,0,0.04);
+    border: 1px solid rgba(190,255,0,0.12);
+    border-radius: 6px; padding: 16px 18px;
+    font-size: 13px; color: var(--muted);
+    line-height: 1.6;
+  }
+  .dl-delete-badge {
+    display: block;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px; color: var(--acid);
+    letter-spacing: 0.12em; margin-bottom: 6px;
+  }
+
+  @media (max-width: 900px) {
+    .dl-trust-steps { grid-template-columns: 1fr; }
+    .dl-trust-section { padding: 60px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span>TRACKING</span><span class="sep">·</span>
+    <span>SELLING YOUR DATA</span><span class="sep">·</span>
+    <span>PROFILING</span><span class="sep">·</span>
+    <span>NUDGING</span><span class="sep">·</span>
+    <span>TARGETING</span><span class="sep">·</span>
+    <span>WATCHING</span><span class="sep">·</span>
+    <span>MANIPULATING</span><span class="sep">·</span>
+    <span>MONETISING YOU</span><span class="sep">·</span>
+    <span>DECIDING WHAT YOU SEE</span><span class="sep">·</span>
+    <span>SHAPING WHAT YOU THINK</span><span class="sep">·</span>
+    <span>TRACKING</span><span class="sep">·</span>
+    <span>SELLING YOUR DATA</span><span class="sep">·</span>
+    <span>PROFILING</span><span class="sep">·</span>
+    <span>NUDGING</span><span class="sep">·</span>
+    <span>TARGETING</span><span class="sep">·</span>
+    <span>WATCHING</span><span class="sep">·</span>
+    <span>MANIPULATING</span><span class="sep">·</span>
+    <span>MONETISING YOU</span><span class="sep">·</span>
+    <span>DECIDING WHAT YOU SEE</span><span class="sep">·</span>
+    <span>SHAPING WHAT YOU THINK</span><span class="sep">·</span>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">F<span>A</span>E</div>
+  <div class="nav-right">
+    <a href="#why" class="nav-link">Why Fae</a>
+    <button class="mode-toggle" id="modeToggle" aria-label="Toggle light/dark mode">
+      <span class="mode-toggle-label" id="modeLabel">[ LIGHT ]</span>
+    </button>
+    <a href="#download" class="nav-cta">Get Fae - free</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <!-- cyberpunk/graffiti layer -->
+  <svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:visible;" viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <!-- broken diagonal slashes - graffiti slash marks -->
+    <line x1="0" y1="120" x2="180" y2="0" stroke="rgba(0,200,255,0.07)" stroke-width="1.5"/>
+    <line x1="0" y1="280" x2="240" y2="80" stroke="rgba(0,200,255,0.05)" stroke-width="1"/>
+    <line x1="1260" y1="800" x2="1440" y2="620" stroke="rgba(255,32,128,0.07)" stroke-width="1.5"/>
+    <line x1="1200" y1="800" x2="1440" y2="480" stroke="rgba(255,32,128,0.04)" stroke-width="1"/>
+    <!-- corner circuit traces -->
+    <path d="M0,0 L80,0 L80,14 L14,14 L14,80 L0,80 Z" fill="none" stroke="rgba(0,200,255,0.15)" stroke-width="1"/>
+    <path d="M1440,800 L1360,800 L1360,786 L1426,786 L1426,720 L1440,720 Z" fill="none" stroke="rgba(255,32,128,0.15)" stroke-width="1"/>
+    <!-- mid scan fragments -->
+    <rect x="0" y="399" width="1440" height="1" fill="rgba(0,200,255,0.04)"/>
+    <rect x="0" y="401" width="900" height="0.5" fill="rgba(255,32,128,0.03)"/>
+    <!-- spray blob - hot pink -->
+    <ellipse cx="1380" cy="680" rx="160" ry="120" fill="rgba(255,32,128,0.05)"/>
+    <!-- spray blob - electric blue -->
+    <ellipse cx="60" cy="180" rx="140" ry="100" fill="rgba(0,200,255,0.06)"/>
+    <!-- tiny crosshair marks - graffiti registration marks -->
+    <g stroke="rgba(0,200,255,0.2)" stroke-width="1" fill="none">
+      <line x1="1100" y1="100" x2="1120" y2="100"/><line x1="1110" y1="90" x2="1110" y2="110"/>
+    </g>
+    <g stroke="rgba(255,32,128,0.2)" stroke-width="1" fill="none">
+      <line x1="340" y1="700" x2="360" y2="700"/><line x1="350" y1="690" x2="350" y2="710"/>
+    </g>
+  </svg>
+
+  <div class="hero-left">
+    <div class="hero-tag">Your AI. Nobody else's.</div>
+
+    <h1 class="hero-h1">
+      <span class="muted-word">THE<span class="strike">IR</span></span><br>
+      INTERNET.<br>
+      <span class="acid">ON YOUR</span><br>
+      TERMS.
+    </h1>
+
+    <div class="hero-sub">
+      Stop being the <em class="muted-em">product.</em><br>
+      <em>Start thinking for yourself.</em>
+    </div>
+
+    <p class="hero-body">
+      Every app, every search, every scroll is <strong>designed to influence you.</strong> Remove the manipulation, the gaslighting and the pressure to group think. Fae is an application that runs entirely on your device. No cloud, no company, no algorithm deciding for you. With Fae, it's just you and the information you seek. <strong>Reject the programming, remove the filters.</strong>
+    </p>
+
+    <div class="stat-row">
+      <div class="stat-item">
+        <div class="stat-num">£0</div>
+        <div class="stat-label">Forever free</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">0</div>
+        <div class="stat-label">Data sent anywhere</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">∞</div>
+        <div class="stat-label">Actually remembers you</div>
+      </div>
+    </div>
+
+    <div class="cta-group">
+      <a href="#download" class="cta-primary">
+        Get Fae free
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <span class="cta-secondary">// macOS + iPhone. No account needed.</span>
+    </div>
+  </div>
+
+  <!-- FLOATING ORB + BUBBLES -->
+  <div class="hero-right">
+    <div class="orb-float4">
+      <div class="fae-aura fae-aura-1"></div>
+      <div class="fae-aura fae-aura-2"></div>
+      <canvas id="pulseCanvas4" width="220" height="220"></canvas>
+      <canvas id="orbCanvas4" width="110" height="110"></canvas>
+    </div>
+    <div class="orb-name4">F<span>A</span>E</div>
+    <div class="fae-state" id="faeState4"></div>
+
+    <div class="chat-float4">
+
+          <!-- Scene 1: Is the news real -->
+          <div class="fae-scene" id="sc4-1">
+            <div class="fae-msg fae-msg-user" id="s4-1u1">is this news story actually true or is it agenda</div>
+            <div class="fae-dots" id="s4-1d1"><span></span><span></span><span></span></div>
+            <div class="fae-msg fae-msg-fae" id="s4-1f1">checked 6 sources. core claim is real, but the framing is doing a lot of work. the bit about "experts say" - those experts are funded by the same group that published it. here's what actually happened.</div>
+            <div class="fae-msg fae-msg-user" id="s4-1u2">so who do i actually trust</div>
+            <div class="fae-dots" id="s4-1d2"><span></span><span></span><span></span></div>
+            <div class="fae-msg fae-msg-fae" id="s4-1f2">nobody, fully. but i can show you how to read the funding trail on any story. takes 2 mins. want me to walk you through it?</div>
+          </div>
+
+          <!-- Scene 2: Think for yourself -->
+          <div class="fae-scene" id="sc4-2">
+            <div class="fae-msg fae-msg-user" id="s4-2u1">everyone at school has the same opinion on this and it feels off</div>
+            <div class="fae-dots" id="s4-2d1"><span></span><span></span><span></span></div>
+            <div class="fae-msg fae-msg-fae" id="s4-2f1">that feeling is worth trusting. here's the actual data on it - not the version that got shared around. there are three serious counterarguments nobody's talking about.</div>
+            <div class="fae-msg fae-msg-user" id="s4-2u2">i want to have an informed opinion of my own - can you surface relevant and verifiable facts?</div>
+            <div class="fae-dots" id="s4-2d2"><span></span><span></span><span></span></div>
+            <div class="fae-msg fae-msg-fae" id="s4-2f2">yes. that's literally the best use of me. no judgment, no pushing you anywhere - just questions and the information you need to get there yourself.</div>
+          </div>
+
+          <!-- Scene 3: Setup / privacy -->
+          <div class="fae-scene" id="sc4-3">
+            <div class="fae-msg fae-msg-user" id="s4-3u1">set this up so nobody can track what i'm doing online</div>
+            <div class="fae-dots" id="s4-3d1"><span></span><span></span><span></span></div>
+            <div class="fae-msg fae-msg-fae" id="s4-3f1">on it. configuring your browser privacy settings, blocking the main trackers, and setting up a DNS that doesn't log queries. want me to explain what each thing does, or just get it done?</div>
+            <div class="fae-msg fae-msg-user" id="s4-3u2">just do it but tell me what you're changing</div>
+            <div class="fae-dots" id="s4-3d2"><span></span><span></span><span></span></div>
+            <div class="fae-msg fae-msg-fae" id="s4-3f2">done. 47 tracker domains blocked. DNS switched. i'll ask before i change anything else - nothing happens without you knowing.</div>
+          </div>
+
+    </div>
+
+    <div class="fae-input-bar">
+      <div class="fae-prompt-label">&gt;_</div>
+      <div class="fae-input-field">
+        <span class="fae-placeholder" id="faePlaceholder4">ask fae anything. she won't tell anyone.</span>
+        <span class="fae-typed" id="faeTyped4"><span class="fae-caret" id="faeCaret4"></span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUTH / VS SECTION -->
+<section class="truth-section" id="why">
+  <div class="truth-inner">
+    <div class="truth-header">
+      <div class="truth-h">
+        EVERY APP<br>
+        <span class="line2">YOU USE IS</span><br>
+        <span class="pink">BUILT AGAINST YOU.</span>
+      </div>
+      <div class="truth-right">
+        <p class="truth-body">
+          Not in a conspiracy theory way. In a business model way. <strong>They need your attention, your data, your reaction</strong> - they're designed to get it. The algorithm isn't neutral. The feed isn't balanced.
+        </p>
+        <p class="truth-body">
+          Fae doesn't need to keep you scrolling. She's not here for profit - she's not selling ads. <strong>Fae is for you and she doesn't exist if you're not in control.</strong>
+        </p>
+      </div>
+    </div>
+
+    <div class="vs-grid">
+      <div class="vs-col vs-col--them">
+        <div class="vs-col-header">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+          The internet right now
+        </div>
+        <div class="vs-item"><div class="vs-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>Decides what you see based on what keeps you scrolling</div>
+        <div class="vs-item"><div class="vs-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>Sells your search history, location and behaviour</div>
+        <div class="vs-item"><div class="vs-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>Rewards outrage, division and dopamine loops</div>
+        <div class="vs-item"><div class="vs-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>Resets every session - doesn't know or care who you are</div>
+        <div class="vs-item"><div class="vs-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>Costs money eventually, or costs you your data</div>
+      </div>
+
+      <div class="vs-divider">
+        <div class="vs-vs">VS</div>
+      </div>
+
+      <div class="vs-col vs-col--fae">
+        <div class="vs-col-header">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+          Fae
+        </div>
+        <div class="vs-item"><div class="vs-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="rgba(0,200,255,0.85)" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>Finds what you actually asked for - no editorial filter</div>
+        <div class="vs-item"><div class="vs-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="rgba(0,200,255,0.85)" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>Lives on your device - nothing leaves, nothing is sold</div>
+        <div class="vs-item"><div class="vs-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="rgba(0,200,255,0.85)" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>Gives you perspective - so you develop your own views</div>
+        <div class="vs-item"><div class="vs-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="rgba(0,200,255,0.85)" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>Builds over time - understands your context and style</div>
+        <div class="vs-item"><div class="vs-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="rgba(0,200,255,0.85)" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>Free. <span style="color:var(--acid)">Not a trial. Not freemium. Just free.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATEMENTS -->
+<section class="statements">
+  <div class="statements-inner">
+    <div class="statement-row">
+
+      <div class="statement-card">
+        <div class="statement-num">01</div>
+        <div class="statement-eyebrow">// offline by default</div>
+        <div class="statement-title">She works<br><span class="acid">without</span><br>the internet.</div>
+        <p class="statement-body">Fae lives on your device. She doesn't need the web to help you - and when she does go online, <strong>your identity stays off it.</strong> No data plastered across servers you've never heard of.</p>
+      </div>
+
+      <div class="statement-card">
+        <div class="statement-num">02</div>
+        <div class="statement-eyebrow">// your guide, not your teacher</div>
+        <div class="statement-title">Whatever<br>you're trying<br>to <span class="acid">figure out.</span></div>
+        <p class="statement-body">Complex topic for school. How to set yourself up for what's coming. A decision nobody around you actually understands. <strong>Fae helps you get there</strong> - without the judgment, without the agenda.</p>
+      </div>
+
+      <div class="statement-card">
+        <div class="statement-num">03</div>
+        <div class="statement-eyebrow">// not built for everyone</div>
+        <div class="statement-title">No two people<br>think <span class="acid">exactly</span><br>the same.</div>
+        <p class="statement-body">You don't need an AI built for everyone. You are someone and there is no need to share. Fae exists on your device, so she can get to know you. <strong>She's private, bespoke - and actually helpful.</strong></p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PROOF STRIP -->
+<div class="proof-strip">
+  <div class="proof-item">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+    Runs 100% on your device
+  </div>
+  <span class="proof-sep">/</span>
+  <div class="proof-item">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="23" y2="23"/><path d="M16.72 11.06A10.94 10.94 0 0119 12.55M5 12.55a10.94 10.94 0 015.17-2.39M10.71 5.05A16 16 0 0122.56 9M1.42 9a15.91 15.91 0 014.7-2.88M8.53 16.11a6 6 0 016.95 0M12 20h.01"/></svg>
+    Works offline - no Wi-Fi needed
+  </div>
+  <span class="proof-sep">/</span>
+  <div class="proof-item">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+    Free - no subscription, ever
+  </div>
+  <span class="proof-sep">/</span>
+  <div class="proof-item">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18" stroke-width="3"/></svg>
+    Mac, iPhone + Apple Watch
+  </div>
+  <span class="proof-sep">/</span>
+  <div class="proof-item">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    Zero data collection
+  </div>
+</div>
+
+<!-- DATA COMPARISON -->
+<section class="data-compare">
+  <div class="data-compare-inner">
+    <div class="compare-col compare-them">
+      <div class="compare-head">
+        <span class="compare-badge them">chatgpt · gemini · copilot</span>
+        What they collect
+      </div>
+      <div class="compare-named-row">
+        <span class="named-badge chatgpt">ChatGPT</span>
+        <span class="named-badge gemini">Gemini</span>
+        <span class="named-badge perplexity">Perplexity</span>
+        <span class="named-badge copilot">Copilot</span>
+      </div>
+      <ul class="compare-list">
+        <li><span class="x-mark">×</span> Your name, email, account</li>
+        <li><span class="x-mark">×</span> Every question, word for word</li>
+        <li><span class="x-mark">×</span> Used to train future models</li>
+        <li><span class="x-mark">×</span> Location, device, browser fingerprint</li>
+        <li><span class="x-mark">×</span> How long you dwell on what topics</li>
+        <li><span class="x-mark">×</span> Linked to your Google / Microsoft ID</li>
+      </ul>
+    </div>
+    <div class="compare-divider"></div>
+    <div class="compare-col compare-fae">
+      <div class="compare-head">
+        <span class="compare-badge fae">fae</span>
+        What Fae collects
+      </div>
+      <div class="compare-nothing">
+        <span class="nothing-word">nothing.</span>
+        <span class="nothing-sub">// not now. not ever.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MANIFESTO -->
+<section class="manifesto">
+  <div class="manifesto-inner">
+    <div class="manifesto-tag">What Fae is actually for</div>
+    <div class="manifesto-pull-quotes">
+    <div class="manifesto-pull">The algorithm has an agenda.<br><span class="pink">Fae doesn't.</span></div>
+    <div class="manifesto-pull secondary">Your thoughts are not a product.</div>
+  </div>
+  <div class="manifesto-lines">
+      <div class="manifesto-line" data-delay="0">FORM YOUR OWN OPINIONS.</div>
+      <div class="manifesto-line" data-delay="100"><span class="acid">ACCESS WHAT YOU NEED.</span></div>
+      <div class="manifesto-line" data-delay="200"><span class="muted">BUILD YOUR CAPABILITY.</span> WITH FAE.</div>
+    </div>
+  </div>
+</section>
+
+<!-- DOWNLOAD TRUST -->
+<section class="dl-trust-section">
+  <div class="dl-trust-inner">
+    <div class="dl-trust-eyebrow">// what actually happens when you download</div>
+    <h2 class="dl-trust-h">Three things.<br><span class="acid">Then nothing.</span></h2>
+    <div class="dl-trust-steps">
+      <div class="dl-trust-step">
+        <div class="dl-step-num">01</div>
+        <div class="dl-step-title">App Store download</div>
+        <div class="dl-step-body">Apple processes the download using their standard App Store analytics. That's between you and Apple - nothing to do with Fae. We don't see it.</div>
+      </div>
+      <div class="dl-trust-step">
+        <div class="dl-step-num">02</div>
+        <div class="dl-step-title">First launch: model download (~8GB)</div>
+        <div class="dl-step-body">Fae downloads her AI models directly to your device over a standard HTTPS connection. One time. Then offline forever. No account created. Nothing logged on our end.</div>
+      </div>
+      <div class="dl-trust-step">
+        <div class="dl-step-num">03</div>
+        <div class="dl-step-title">Permissions: zero mandatory</div>
+        <div class="dl-step-body">Fae requests mic access (for voice - optional) and nothing else. No location. No contacts unless you explicitly grant them. No push notifications. You're in control of all of it.</div>
+      </div>
+    </div>
+    <div class="dl-trust-delete">
+      <span class="dl-delete-badge">// if you want to delete it</span>
+      Drag Fae.app to the trash. That's it. No account to close. No data on a server to request deletion of. It's gone because it was only ever on your machine.
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="download">
+  <div class="cta-inner">
+    <div class="cta-pre">// free download · no account · no catch</div>
+    <h2 class="cta-h">YOUR AI.<br><span class="pink">YOUR RULES.</span></h2>
+    <p class="cta-body">One download. Fae lives on your Mac and iPhone. No Wi-Fi required, no subscription, no one watching what you ask. She's yours - not ours, not anyone else's.</p>
+    <a href="#" class="cta-btn">
+      Get Fae free
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+    </a>
+    <div class="cta-small">// macOS 13+ · iPhone · Apple Watch · Rust backend · MLX inference · zero cloud</div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">F<span>A</span>E</div>
+  <div class="footer-links">
+    <a href="#">Privacy</a>
+    <a href="#">About</a>
+    <a href="#">Autonomi</a>
+  </div>
+  <div>Created by Saorsa Labs | For Autonomi</div>
+</footer>
+
+<script>
+window.addEventListener('DOMContentLoaded', function() {
+
+  // ── ORB (acid green palette) ─────────────────────────────────
+  const orbCanvas = document.getElementById('orbCanvas4');
+  const pulseCanvas = document.getElementById('pulseCanvas4');
+  if (!orbCanvas || !pulseCanvas) return;
+
+  const oc = orbCanvas.getContext('2d');
+  const pc = pulseCanvas.getContext('2d');
+  const OW = orbCanvas.width, OH = orbCanvas.height;
+  const ocx = OW/2, ocy = OH/2, R = OW/2 - 1;
+  const PW = pulseCanvas.width, PH = pulseCanvas.height;
+  const pcx = PW/2, pcy = PH/2;
+
+  // acid green + electric palette - switches on light mode
+  const PALETTE_DARK = [
+    [0,200,255],   // electric blue
+    [0,160,220],   // deep blue
+    [255,32,128],  // hot pink
+    [200,0,100],   // deep pink
+    [80,220,255],  // cyan highlight
+  ];
+
+  const PALETTE_LIGHT = [
+    [0,80,204],    // electric blue
+    [40,120,230],  // sky blue
+    [204,16,96],   // hot pink
+    [0,60,180],    // deep blue
+    [180,0,80],    // deep pink
+  ];
+
+  function getPalette() {
+    return document.body.classList.contains('light-mode') ? PALETTE_LIGHT : PALETTE_DARK;
+  }
+
+  const blobs = Array.from({length:5}, (_,i) => ({
+    x: ocx + (Math.random()-0.5)*R*0.5,
+    y: ocy + (Math.random()-0.5)*R*0.5,
+    vx: (Math.random()-0.5)*0.25,
+    vy: (Math.random()-0.5)*0.25,
+    r: R*0.35 + Math.random()*R*0.18,
+    ci: i % 5,
+    ph: Math.random()*Math.PI*2
+  }));
+
+  let rings = [];
+  let nextPulse = 0;
+  const rhythm = [0.7,0.45,0.4,1.0,0.55,0.4,0.8,1.3,0.4,0.55];
+  let ri = 0;
+
+  function spawnRing(t) {
+    rings.push({
+      born: t, speed: 30+Math.random()*18,
+      thick: 5+Math.random()*6, ci: Math.floor(Math.random()*3),
+      str: 0.06+Math.random()*0.05, maxR: 72
+    });
+  }
+
+  let start = null;
+  function frame(ts) {
+    if (!start) start = ts;
+    const t = (ts-start)/1000;
+    if (t >= nextPulse) { spawnRing(t); nextPulse = t+rhythm[ri++%rhythm.length]; }
+
+    // ── draw orb (new: large zoomed blob, no focal point) ──
+    oc.clearRect(0,0,OW,OH);
+
+    const _isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+      || document.body.classList.contains('dark-mode');
+
+    if (!frame._cr) {
+      const _p0 = PALETTE[0];
+      frame._cr = _p0[0]; frame._cg = _p0[1]; frame._cb = _p0[2];
+      frame._tr = _p0[0]; frame._tg = _p0[1]; frame._tb = _p0[2];
+      frame._mt = 0;
+    }
+    frame._mt++;
+    if (frame._mt > 160) {
+      const _np = PALETTE[Math.floor(Math.random() * PALETTE.length)];
+      frame._tr = _np[0]; frame._tg = _np[1]; frame._tb = _np[2];
+      frame._mt = 0;
+    }
+    frame._cr += (frame._tr - frame._cr) * 0.007;
+    frame._cg += (frame._tg - frame._cg) * 0.007;
+    frame._cb += (frame._tb - frame._cb) * 0.007;
+    const _cr = frame._cr, _cg = frame._cg, _cb = frame._cb;
+
+    const clip = new Path2D();
+    clip.arc(ocx, ocy, R, 0, Math.PI*2);
+    oc.save();
+    oc.clip(clip);
+
+    if (_isDark) {
+      oc.fillStyle = `rgba(${(_cr*0.18)|0},${(_cg*0.10)|0},${(_cb*0.06)|0},1)`;
+    } else {
+      oc.fillStyle = `rgba(253,247,238,1)`;
+    }
+    oc.fillRect(0, 0, OW, OH);
+
+    const _bx = ocx + Math.cos(t * 0.13) * R * 0.35;
+    const _by = ocy + Math.sin(t * 0.17) * R * 0.30;
+    const _g1 = oc.createRadialGradient(_bx, _by, 0, _bx, _by, R * 1.4);
+    _g1.addColorStop(0,    `rgba(${_cr|0},${_cg|0},${_cb|0},0.72)`);
+    _g1.addColorStop(0.4,  `rgba(${_cr|0},${_cg|0},${_cb|0},0.45)`);
+    _g1.addColorStop(0.75, `rgba(${_cr|0},${_cg|0},${_cb|0},0.12)`);
+    _g1.addColorStop(1,    'rgba(0,0,0,0)');
+    oc.fillStyle = _g1;
+    oc.beginPath(); oc.arc(ocx, ocy, R, 0, Math.PI*2); oc.fill();
+
+    const _ar = Math.min(255, (_cr + 32)|0);
+    const _ag = Math.min(255, (_cg + 62)|0);
+    const _ab = Math.min(255, (_cb + 18)|0);
+    const _bx2 = ocx + Math.cos(t * 0.11 + 3.14) * R * 0.38;
+    const _by2 = ocy + Math.sin(t * 0.15 + 2.0)  * R * 0.32;
+    const _g2 = oc.createRadialGradient(_bx2, _by2, 0, _bx2, _by2, R * 1.1);
+    _g2.addColorStop(0,   `rgba(${_ar},${_ag},${_ab},0.38)`);
+    _g2.addColorStop(0.6, `rgba(${_ar},${_ag},${_ab},0.10)`);
+    _g2.addColorStop(1,   'rgba(0,0,0,0)');
+    oc.fillStyle = _g2;
+    oc.beginPath(); oc.arc(ocx, ocy, R, 0, Math.PI*2); oc.fill();
+
+    const _vig = oc.createRadialGradient(ocx, ocy, R * 0.6, ocx, ocy, R);
+    _vig.addColorStop(0, 'rgba(0,0,0,0)');
+    _vig.addColorStop(1, _isDark ? 'rgba(0,0,0,0.28)' : 'rgba(160,80,20,0.07)');
+    oc.fillStyle = _vig;
+    oc.beginPath(); oc.arc(ocx, ocy, R, 0, Math.PI*2); oc.fill();
+
+    oc.restore();
+
+    pc.clearRect(0,0,PW,PH);
+    rings = rings.filter(ring => {
+      const age=t-ring.born; if(age<0) return true;
+      const rad=age*ring.speed; if(rad>ring.maxR) return false;
+      const life=rad/ring.maxR;
+      const fade=life<0.1?life/0.1:1-((life-0.1)/0.9);
+      const alpha=Math.max(0,fade*ring.str);
+      if(alpha<0.002) return true;
+      const [cr,cg,cb]=PALETTE[ring.ci];
+      const inner=Math.max(0,rad-ring.thick/2), outer=rad+ring.thick/2;
+      const g=pc.createRadialGradient(pcx,pcy,inner,pcx,pcy,outer);
+      g.addColorStop(0,`rgba(${cr},${cg},${cb},0)`);
+      g.addColorStop(0.45,`rgba(${cr},${cg},${cb},${alpha})`);
+      g.addColorStop(1,`rgba(${cr},${cg},${cb},0)`);
+      pc.fillStyle=g; pc.beginPath(); pc.arc(pcx,pcy,outer,0,Math.PI*2); pc.fill();
+      return true;
+    });
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  // ── CONVERSATIONS ────────────────────────────────────────────
+  const SCENES = [
+    {
+      id: 'sc4-1',
+      inputs: ['is this news story actually true or is it agenda', 'so who do i actually trust'],
+      seq: ['s4-1u1','s4-1d1','s4-1f1','s4-1u2','s4-1d2','s4-1f2']
+    },
+    {
+      id: 'sc4-2',
+      inputs: ["everyone at school has the same opinion on this and it feels off", "i want to have an informed opinion of my own - can you surface relevant and verifiable facts?"],
+      seq: ['s4-2u1','s4-2d1','s4-2f1','s4-2u2','s4-2d2','s4-2f2']
+    },
+    {
+      id: 'sc4-3',
+      inputs: ['set this up so nobody can track what i\'m doing online', 'just do it but tell me what you\'re changing'],
+      seq: ['s4-3u1','s4-3d1','s4-3f1','s4-3u2','s4-3d2','s4-3f2']
+    }
+  ];
+
+  let sceneIdx = 0;
+  const stateEl       = document.getElementById('faeState4');
+  const placeholderEl = document.getElementById('faePlaceholder4');
+  const typedEl       = document.getElementById('faeTyped4');
+  const caretEl       = document.getElementById('faeCaret4');
+
+  const wait   = ms => new Promise(r => setTimeout(r, ms));
+  const setState = s => { if(stateEl) stateEl.textContent = s; };
+  const showEl = id => { const e=document.getElementById(id); if(e) e.classList.add('show'); };
+  const hideEl = id => { const e=document.getElementById(id); if(e) e.classList.remove('show'); };
+
+  async function typeInto(text) {
+    if(!placeholderEl||!typedEl||!caretEl) return;
+    placeholderEl.style.opacity='0';
+    caretEl.style.opacity='1';
+    Array.from(typedEl.childNodes).forEach(n=>{ if(n!==caretEl) n.remove(); });
+    const node = document.createTextNode('');
+    typedEl.insertBefore(node, caretEl);
+    for(let i=1; i<=text.length; i++) {
+      node.nodeValue = text.slice(0,i);
+      await wait(42+Math.random()*28);
+    }
+    await wait(480);
+  }
+
+  function clearInput() {
+    if(!typedEl||!caretEl||!placeholderEl) return;
+    Array.from(typedEl.childNodes).forEach(n=>{ if(n!==caretEl) n.remove(); });
+    caretEl.style.opacity='0';
+    placeholderEl.style.opacity='1';
+  }
+
+  function resetScene(sc) {
+    const scEl = document.getElementById(sc.id);
+    if(scEl) { scEl.classList.remove('active'); scEl.style.opacity='1'; }
+    sc.seq.forEach(id => hideEl(id));
+  }
+
+  async function runScene(sc) {
+    const scEl = document.getElementById(sc.id);
+    if(scEl) scEl.classList.add('active');
+    setState('');
+    clearInput();
+    await wait(700);
+
+    setState('listening...');
+    await typeInto(sc.inputs[0]);
+    showEl(sc.seq[0]);
+    clearInput();
+    await wait(300);
+
+    showEl(sc.seq[1]);
+    setState('thinking...');
+    await wait(1500);
+    hideEl(sc.seq[1]);
+    showEl(sc.seq[2]);
+    setState('listening...');
+    await wait(2000);
+
+    await typeInto(sc.inputs[1]);
+    showEl(sc.seq[3]);
+    clearInput();
+    await wait(300);
+
+    showEl(sc.seq[4]);
+    setState('thinking...');
+    await wait(1300);
+    hideEl(sc.seq[4]);
+    showEl(sc.seq[5]);
+    setState('listening...');
+
+    await wait(100);
+    const finalMsg = document.getElementById(sc.seq[5]);
+    if(finalMsg) finalMsg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    await wait(4500);
+
+    if(scEl) scEl.style.opacity='0';
+    await wait(600);
+    resetScene(sc);
+    clearInput();
+    setState('');
+    await wait(400);
+  }
+
+  async function loop() {
+    while(true) {
+      await runScene(SCENES[sceneIdx % SCENES.length]);
+      sceneIdx++;
+    }
+  }
+
+  setTimeout(loop, 800);
+
+  // ── MANIFESTO SCROLL REVEAL ───────────────────────────────────
+  const lines = document.querySelectorAll('.manifesto-line');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const delay = parseInt(entry.target.dataset.delay || 0);
+        setTimeout(() => entry.target.classList.add('visible'), delay);
+      }
+    });
+  }, { threshold: 0.3 });
+  lines.forEach(l => observer.observe(l));
+
+  // ── LIGHT / DARK TOGGLE ──────────────────────────────────────
+  const toggleBtn = document.getElementById('modeToggle');
+  const modeLabel = document.getElementById('modeLabel');
+
+  function applyMode(isLight) {
+    document.body.classList.toggle('light-mode', isLight);
+    modeLabel.textContent = isLight ? '[ DARK ]' : '[ LIGHT ]';
+    localStorage.setItem('fae4-mode', isLight ? 'light' : 'dark');
+  }
+
+  const saved = localStorage.getItem('fae4-mode');
+  const preferLight = saved ? saved === 'light' : window.matchMedia('(prefers-color-scheme: light)').matches;
+  applyMode(preferLight);
+
+  toggleBtn.addEventListener('click', () => {
+    applyMode(!document.body.classList.contains('light-mode'));
+  });
+
+});
+</script>
+</body>
+</html>
