@@ -1066,9 +1066,6 @@
   <div class="nav-logo">F<span>A</span>E</div>
   <div class="nav-right">
     <a href="#why" class="nav-link">Why Fae</a>
-    <button class="mode-toggle" id="modeToggle" aria-label="Toggle light/dark mode">
-      <span class="mode-toggle-label" id="modeLabel">[ LIGHT ]</span>
-    </button>
     <a href="#download" class="nav-cta">Get Fae - free</a>
   </div>
 </nav>
@@ -1447,7 +1444,7 @@ window.addEventListener('DOMContentLoaded', function() {
   ];
 
   function getPalette() {
-    return document.body.classList.contains('light-mode') ? PALETTE_LIGHT : PALETTE_DARK;
+    return PALETTE_DARK;
   }
 
   const blobs = Array.from({length:5}, (_,i) => ({
@@ -1689,23 +1686,7 @@ window.addEventListener('DOMContentLoaded', function() {
   }, { threshold: 0.3 });
   lines.forEach(l => observer.observe(l));
 
-  // ── LIGHT / DARK TOGGLE ──────────────────────────────────────
-  const toggleBtn = document.getElementById('modeToggle');
-  const modeLabel = document.getElementById('modeLabel');
-
-  function applyMode(isLight) {
-    document.body.classList.toggle('light-mode', isLight);
-    modeLabel.textContent = isLight ? '[ DARK ]' : '[ LIGHT ]';
-    localStorage.setItem('fae4-mode', isLight ? 'light' : 'dark');
-  }
-
-  const saved = localStorage.getItem('fae4-mode');
-  const preferLight = saved ? saved === 'light' : window.matchMedia('(prefers-color-scheme: light)').matches;
-  applyMode(preferLight);
-
-  toggleBtn.addEventListener('click', () => {
-    applyMode(!document.body.classList.contains('light-mode'));
-  });
+  // Dark mode only — no toggle
 
 });
 </script>
